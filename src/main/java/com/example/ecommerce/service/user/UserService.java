@@ -41,7 +41,7 @@ public class UserService {
                 new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
         );
         UserEntity userEntity = userRepository.findByUsername(request.getUsername()).orElseThrow();
-        var jwtToken=jwtService.generateToken(userEntity);
+        String jwtToken = jwtService.generateToken(userEntity);
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .build();
