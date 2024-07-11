@@ -9,7 +9,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
-import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,8 +16,7 @@ import java.util.function.Function;
 
 @Service
 public class JwtService {
-    private static  final  String SECRET_KEY ="f9b62abb0dcc765f03c0efff7a8e0ee4b31017fce3672c3eb56c296803bf643c50b1cb55080ef405b140f92710702fc932284eeac227e46689ef72994c68cc0c";
-
+    private static final String SECRET_KEY = "f9b62abb0dcc765f03c0efff7a8e0ee4b31017fce3672c3eb56c296803bf643c50b1cb55080ef405b140f92710702fc932284eeac227e46689ef72994c68cc0c";
 
 
     public String extractUsername(String token) {
@@ -26,7 +24,7 @@ public class JwtService {
     }
 
     public <T> T extactClaims(String token, Function<Claims, T> claimsResolver) {
-        final Claims claims=extactAllClaims(token);
+        final Claims claims = extactAllClaims(token);
         return claimsResolver.apply(claims);
     }
 
@@ -41,7 +39,7 @@ public class JwtService {
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis()+1000*60*24))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -71,7 +69,7 @@ public class JwtService {
     }
 
     private Key getSignInKey() {
-        byte [] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
+        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 }

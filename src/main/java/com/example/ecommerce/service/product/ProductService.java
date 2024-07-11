@@ -1,9 +1,16 @@
 package com.example.ecommerce.service.product;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import com.example.ecommerce.dto.ProductDto;
+import com.example.ecommerce.entity.ProductEntity;
 
-@Service
-@RequiredArgsConstructor
-public class ProductService {
+import java.util.List;
+
+public interface ProductService {
+    List<ProductEntity> getAllProducts();
+
+    ProductEntity createProduct(ProductDto product);
+
+    void updateProduct(ProductEntity product);
+
+    void deletebyId(Long id);
 }
