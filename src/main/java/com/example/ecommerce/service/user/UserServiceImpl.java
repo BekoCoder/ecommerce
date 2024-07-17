@@ -5,6 +5,7 @@ import com.example.ecommerce.dto.AuthenticationResponse;
 import com.example.ecommerce.dto.RegisterRequest;
 import com.example.ecommerce.entity.UserEntity;
 import com.example.ecommerce.entity.enums.UserRole;
+import com.example.ecommerce.exception.AlreadyExistException;
 import com.example.ecommerce.repository.UserRepository;
 import com.example.ecommerce.service.JwtService;
 import lombok.RequiredArgsConstructor;
@@ -29,11 +30,14 @@ public class UserServiceImpl {
         UserEntity userEntity = modelMapper.map(request, UserEntity.class);
         userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
         userEntity.setRoles(List.of(UserRole.USER));
-        userRepository.save(userEntity);
-        var jwtToken = jwtService.generateToken(userEntity);
-        return AuthenticationResponse.builder()
-                .token(jwtToken)
-                .build();
+        if(!checkUser(userEntity.getUsername())) {
+            userRepository.save(userEntity);
+            var jwtToken = jwtService.generateToken(userEntity);
+            return AuthenticationResponse.builder()
+                    .token(jwtToken)
+                    .build();
+        }
+        throw new AlreadyExistException("User already exist");
     }
 
     public AuthenticationResponse login(AuthenticationRequest request) {
@@ -45,5 +49,9 @@ public class UserServiceImpl {
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .build();
+    }
+
+    public boolean checkUser(String username) {
+       return userRepository.findByUsername(username).isPresent();
     }
 }
