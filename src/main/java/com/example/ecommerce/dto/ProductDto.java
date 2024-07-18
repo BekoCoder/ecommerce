@@ -14,6 +14,9 @@ import java.util.List;
 @Schema(description = "Product bo'yicha ma'lumotlar")
 public class ProductDto {
 
+    @Schema(description = "Mahsulot Id si")
+    private Long id;
+
     @Schema(description = "Name")
     private String name;
 

@@ -43,6 +43,24 @@ public class AdminController {
         return ResponseEntity.ok(dto);
     }
 
+    @Operation(summary = "Id orqali mahsulotni o'chirish")
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity deleteProduct(@PathVariable (value = "id") Long id) {
+        productService.deletebyId(id);
+        log.trace("Accessing DELETE /api/product/delete/{}", id);
+        return ResponseEntity.ok(Boolean.TRUE);
+
+    }
+
+    @Operation(summary = "Mahsulotni yangilash")
+    @PutMapping("/update")
+    public ResponseEntity<?> update(@RequestBody ProductDto product) {
+        log.trace("Accessing PUT /api/product/update/{}", product.getId());
+        productService.updateProduct(product);
+        return ResponseEntity.ok(Boolean.TRUE);
+
+    }
+
 
 
 }

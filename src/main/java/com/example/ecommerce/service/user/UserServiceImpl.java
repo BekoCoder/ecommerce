@@ -32,7 +32,7 @@ public class UserServiceImpl {
         userEntity.setRoles(List.of(UserRole.USER));
         if(!checkUser(userEntity.getUsername())) {
             userRepository.save(userEntity);
-            var jwtToken = jwtService.generateToken(userEntity);
+            String jwtToken = jwtService.generateToken(userEntity);
             return AuthenticationResponse.builder()
                     .token(jwtToken)
                     .build();

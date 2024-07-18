@@ -10,7 +10,7 @@ public interface ProductService {
 
     ProductEntity createProduct(ProductDto product);
 
-    void updateProduct(ProductEntity product);
+    void updateProduct(ProductDto product);
 
     void deletebyId(Long id);
     ProductDto getProductById(Long id);
