@@ -4,6 +4,7 @@ import com.example.ecommerce.dto.ProductDto;
 import com.example.ecommerce.entity.ProductEntity;
 import com.example.ecommerce.entity.enums.ProductEnum;
 import com.example.ecommerce.exception.DataNotFoundException;
+import com.example.ecommerce.exception.ProductNotFoundException;
 import com.example.ecommerce.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -34,10 +35,10 @@ public class ProductServiceImpl implements ProductService {
                 if (Arrays.asList(ProductEnum.values()).contains(singleProductEnum)) {
                     product.setProductEnumList(List.of(singleProductEnum));
                 } else {
-                    throw new IllegalArgumentException("Bunday turdagi mahsulot yo'q");
+                    throw new ProductNotFoundException("Bunday turdagi mahsulot yo'q");
                 }
             } else {
-                throw new IllegalArgumentException("Bittadan ortiq mahsulot turini kirita olmaysiz");
+                throw new ProductNotFoundException("Bittadan ortiq mahsulot turini kirita olmaysiz");
             }
         }
 

@@ -22,5 +22,14 @@ server:
     context-path: /ecommerce-api
   port: 8081
 
+springdoc:
+  swagger-ui:
+    enabled: true
+    tags-sorter: alpha
+    display-request-duration: true
+    operations-sorter: method
+    path: /docs
+    default-models-expand-depth: -1
+
 
 
