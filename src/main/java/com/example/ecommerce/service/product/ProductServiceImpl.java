@@ -67,7 +67,7 @@ public class ProductServiceImpl implements ProductService {
     public ProductDto getProductById(Long id) {
         Optional<ProductEntity> byId = productRepository.findById(id);
         if(byId.isEmpty()){
-            throw  new DataNotFoundException("Product not found");
+            throw  new DataNotFoundException("Mahsulot topilmadi");
         }
         return modelMapper.map(byId.get(), ProductDto.class);
     }

@@ -3,6 +3,7 @@ package com.example.ecommerce.controller;
 import com.example.ecommerce.dto.ProductDto;
 import com.example.ecommerce.entity.ProductEntity;
 import com.example.ecommerce.service.product.ProductService;
+import com.example.ecommerce.service.user.UserServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +21,7 @@ import java.util.List;
 @Slf4j
 public class AdminController {
     private final ProductService productService;
+    private final UserServiceImpl userService;
 
     @Operation(summary = "Mahsulot qo'shish")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -59,6 +61,14 @@ public class AdminController {
         productService.updateProduct(product);
         return ResponseEntity.ok(Boolean.TRUE);
 
+    }
+
+    @Operation(summary = "Userlarni o'chirish id orqali")
+    @DeleteMapping("/user/{id}")
+    public ResponseEntity<?> deleteById(@PathVariable Long id) {
+        log.trace("Accessing DELETE /api/user/delete/{}", id);
+        userService.deleteById(id);
+        return ResponseEntity.ok(Boolean.TRUE);
     }
 
 

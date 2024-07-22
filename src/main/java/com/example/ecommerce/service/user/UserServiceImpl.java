@@ -6,6 +6,7 @@ import com.example.ecommerce.dto.RegisterRequest;
 import com.example.ecommerce.entity.UserEntity;
 import com.example.ecommerce.entity.enums.UserRole;
 import com.example.ecommerce.exception.AlreadyExistException;
+import com.example.ecommerce.exception.UserNotFoundException;
 import com.example.ecommerce.repository.UserRepository;
 import com.example.ecommerce.service.JwtService;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +38,7 @@ public class UserServiceImpl {
                     .token(jwtToken)
                     .build();
         }
-        throw new AlreadyExistException("User already exist");
+        throw new AlreadyExistException("User allaqachon mavjud");
     }
 
     public AuthenticationResponse login(AuthenticationRequest request) {
@@ -45,13 +46,24 @@ public class UserServiceImpl {
                 new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
         );
         UserEntity userEntity = userRepository.findByUsername(request.getUsername()).orElseThrow();
-        String jwtToken = jwtService.generateToken(userEntity);
-        return AuthenticationResponse.builder()
-                .token(jwtToken)
-                .build();
+        if(userEntity.getIsDeleted()==1){
+            throw new UserNotFoundException("User o'chirilgan");
+        }
+        else {
+            String jwtToken = jwtService.generateToken(userEntity);
+            return AuthenticationResponse.builder()
+                    .token(jwtToken)
+                    .build();
+        }
     }
 
     public boolean checkUser(String username) {
        return userRepository.findByUsername(username).isPresent();
+    }
+
+    public void deleteById(Long id) {
+        UserEntity userEntity = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User o'chirilgan"));
+        userEntity.setIsDeleted(1);
+        userRepository.save(userEntity);
     }
 }

@@ -26,6 +26,7 @@ public class UserEntity  extends BaseEntity implements UserDetails {
     private String password;
     @Enumerated(value = EnumType.STRING)
     private List<UserRole> roles;
+    private Integer isDeleted=0;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

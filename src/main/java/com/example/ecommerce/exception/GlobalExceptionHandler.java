@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class GlobalExceptionHandler {
     @ExceptionHandler(AlreadyExistException.class)
     public ResponseEntity<String> handleAlreadyExistException(AlreadyExistException ex) {
-        return new ResponseEntity<>("Bu foydalanuvchi Ro'yhatdan o'tgan", HttpStatus.CONFLICT);
+        return new ResponseEntity<>("Bu foydalanuvchi ro'yhatdan o'tgan", HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(DataNotFoundException.class)
@@ -19,6 +19,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ProductNotFoundException.class)
     public ResponseEntity<String> productNotFound(ProductNotFoundException ex) {
        return new ResponseEntity<>("Bunday turdaki mahsulot yo'q", HttpStatus.NOT_FOUND);
+    }
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<String> userNotFound(UserNotFoundException ex) {
+        return new ResponseEntity<>("User o'chirilgan", HttpStatus.NOT_FOUND);
     }
 
 
