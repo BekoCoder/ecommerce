@@ -1,9 +1,7 @@
 package com.example.ecommerce.entity;
 
 import com.example.ecommerce.entity.enums.ProductEnum;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,5 +22,7 @@ public class ProductEntity extends BaseEntity {
     private String color;
     @Enumerated(value = EnumType.STRING)
     private List<ProductEnum> productEnumList;
+    @OneToOne(mappedBy = "product", fetch = FetchType.LAZY)
+    private ImageEntity image;
 
 }

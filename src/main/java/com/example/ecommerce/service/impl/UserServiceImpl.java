@@ -1,4 +1,4 @@
-package com.example.ecommerce.service.user;
+package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.dto.AuthenticationRequest;
 import com.example.ecommerce.dto.AuthenticationResponse;
@@ -65,5 +65,12 @@ public class UserServiceImpl {
         UserEntity userEntity = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User o'chirilgan"));
         userEntity.setIsDeleted(1);
         userRepository.save(userEntity);
+    }
+
+    public UserEntity updateUser(UserEntity userEntity, Long id) {
+        UserEntity userEntity1 = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User o'chirilgan"));
+        userEntity1.setUsername(userEntity.getUsername());
+        userEntity1.setPassword(passwordEncoder.encode(userEntity.getPassword()));
+         return  userRepository.save(userEntity1);
     }
 }

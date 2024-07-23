@@ -1,9 +1,11 @@
 package com.example.ecommerce.controller;
 
 import com.example.ecommerce.dto.ProductDto;
+import com.example.ecommerce.entity.ImageEntity;
 import com.example.ecommerce.entity.ProductEntity;
-import com.example.ecommerce.service.product.ProductService;
-import com.example.ecommerce.service.user.UserServiceImpl;
+import com.example.ecommerce.service.ImageService;
+import com.example.ecommerce.service.ProductService;
+import com.example.ecommerce.service.impl.UserServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,7 +13,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -22,6 +26,7 @@ import java.util.List;
 public class AdminController {
     private final ProductService productService;
     private final UserServiceImpl userService;
+    private final ImageService imageService;
 
     @Operation(summary = "Mahsulot qo'shish")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -69,6 +74,13 @@ public class AdminController {
         log.trace("Accessing DELETE /api/user/delete/{}", id);
         userService.deleteById(id);
         return ResponseEntity.ok(Boolean.TRUE);
+    }
+
+    @Operation(summary = "Rasm qo'shish")
+    @PostMapping("/images")
+    public ResponseEntity<String> uploadImage(@RequestParam(value = "file")  MultipartFile file, ImageEntity imageEntity) throws IOException {
+         imageService.saveImage(file, imageEntity);
+        return ResponseEntity.ok("Rasm saqlandi");
     }
 
 

@@ -1,4 +1,4 @@
-package com.example.ecommerce.service.product;
+package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.dto.ProductDto;
 import com.example.ecommerce.entity.ProductEntity;
@@ -6,6 +6,7 @@ import com.example.ecommerce.entity.enums.ProductEnum;
 import com.example.ecommerce.exception.DataNotFoundException;
 import com.example.ecommerce.exception.ProductNotFoundException;
 import com.example.ecommerce.repository.ProductRepository;
+import com.example.ecommerce.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
