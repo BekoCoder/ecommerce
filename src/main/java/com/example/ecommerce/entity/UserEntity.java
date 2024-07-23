@@ -20,13 +20,13 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserEntity  extends BaseEntity implements UserDetails {
+public class UserEntity extends BaseEntity implements UserDetails {
     private String name;
     private String username;
     private String password;
     @Enumerated(value = EnumType.STRING)
     private List<UserRole> roles;
-    private Integer isDeleted=0;
+    private Integer isDeleted = 0;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

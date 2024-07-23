@@ -3,6 +3,7 @@ package com.example.ecommerce.dto;
 import com.example.ecommerce.entity.enums.ProductEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -27,4 +28,7 @@ public class ProductDto {
     private String color;
 
     private List<ProductEnum> productEnumList;
+
+    @Schema(description = "Mahsulot rasmi")
+    private MultipartFile file;
 }

@@ -31,7 +31,8 @@ public class AdminController {
     @Operation(summary = "Mahsulot qo'shish")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/create")
-    public ResponseEntity<?> create(@RequestBody ProductDto product) {
+    public ResponseEntity<?> create(@ModelAttribute ProductDto product) throws IOException {
+        log.trace("Accessing product: {}", product);
         return ResponseEntity.ok(productService.createProduct(product));
     }
 
@@ -44,15 +45,15 @@ public class AdminController {
 
     @Operation(summary = "Id orqali mahsulot olish")
     @GetMapping("/get/{id}")
-    public ResponseEntity<ProductDto> productById(@PathVariable (value = "id") Long id) {
-        ProductDto dto = productService.getProductById(id);
+    public ResponseEntity<ProductEntity> productById(@PathVariable(value = "id") Long id) {
+        ProductEntity entity = productService.getProductById(id);
         log.trace("Accessing GET api/product/get/{}", id);
-        return ResponseEntity.ok(dto);
+        return ResponseEntity.ok(entity);
     }
 
     @Operation(summary = "Id orqali mahsulotni o'chirish")
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity deleteProduct(@PathVariable (value = "id") Long id) {
+    public ResponseEntity deleteProduct(@PathVariable(value = "id") Long id) {
         productService.deletebyId(id);
         log.trace("Accessing DELETE /api/product/delete/{}", id);
         return ResponseEntity.ok(Boolean.TRUE);
@@ -78,11 +79,10 @@ public class AdminController {
 
     @Operation(summary = "Rasm qo'shish")
     @PostMapping("/images")
-    public ResponseEntity<String> uploadImage(@RequestParam(value = "file")  MultipartFile file, ImageEntity imageEntity) throws IOException {
-         imageService.saveImage(file, imageEntity);
+    public ResponseEntity<String> uploadImage(@RequestParam(value = "file") MultipartFile file, ImageEntity imageEntity) throws IOException {
+        imageService.saveImage(file, imageEntity);
         return ResponseEntity.ok("Rasm saqlandi");
     }
-
 
 
 }

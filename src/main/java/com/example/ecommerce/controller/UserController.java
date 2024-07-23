@@ -17,10 +17,9 @@ public class UserController {
 
     @Operation(summary = "Userni yangilash")
     @PutMapping("/update")
-    public ResponseEntity<UserEntity> updateUser(@RequestBody UserEntity user, @RequestParam( value = "userId",required = false) Long userId) {
+    public ResponseEntity<UserEntity> updateUser(@RequestBody UserEntity user, @RequestParam(value = "userId", required = false) Long userId) {
         return ResponseEntity.ok(userService.updateUser(user, userId));
     }
-
 
 
 }

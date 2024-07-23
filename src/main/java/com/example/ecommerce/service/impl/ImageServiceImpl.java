@@ -1,10 +1,8 @@
 package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.entity.ImageEntity;
-import com.example.ecommerce.exception.DataNotFoundException;
 import com.example.ecommerce.exception.ImageNotFoundException;
 import com.example.ecommerce.repository.ImageRepository;
-import com.example.ecommerce.repository.ProductRepository;
 import com.example.ecommerce.service.ImageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,6 +14,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class ImageServiceImpl implements ImageService {
     private final ImageRepository imageRepository;
+
     @Override
     public ImageEntity saveImage(MultipartFile file, ImageEntity imageEntity) throws IOException {
         String filename = file.getOriginalFilename();

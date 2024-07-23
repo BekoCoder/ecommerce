@@ -14,6 +14,6 @@ public class RegisterRequest {
     private String name;
     private String username;
     private String password;
-    private Integer isDeleted=0;
+    private Integer isDeleted = 0;
     private List<UserRole> roles;
 }

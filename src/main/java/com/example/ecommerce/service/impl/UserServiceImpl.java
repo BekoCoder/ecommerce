@@ -31,7 +31,7 @@ public class UserServiceImpl {
         UserEntity userEntity = modelMapper.map(request, UserEntity.class);
         userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
         userEntity.setRoles(List.of(UserRole.USER));
-        if(!checkUser(userEntity.getUsername())) {
+        if (!checkUser(userEntity.getUsername())) {
             userRepository.save(userEntity);
             String jwtToken = jwtService.generateToken(userEntity);
             return AuthenticationResponse.builder()
@@ -46,10 +46,9 @@ public class UserServiceImpl {
                 new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
         );
         UserEntity userEntity = userRepository.findByUsername(request.getUsername()).orElseThrow();
-        if(userEntity.getIsDeleted()==1){
+        if (userEntity.getIsDeleted() == 1) {
             throw new UserNotFoundException("User o'chirilgan");
-        }
-        else {
+        } else {
             String jwtToken = jwtService.generateToken(userEntity);
             return AuthenticationResponse.builder()
                     .token(jwtToken)
@@ -58,7 +57,7 @@ public class UserServiceImpl {
     }
 
     public boolean checkUser(String username) {
-       return userRepository.findByUsername(username).isPresent();
+        return userRepository.findByUsername(username).isPresent();
     }
 
     public void deleteById(Long id) {
@@ -71,6 +70,6 @@ public class UserServiceImpl {
         UserEntity userEntity1 = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User o'chirilgan"));
         userEntity1.setUsername(userEntity.getUsername());
         userEntity1.setPassword(passwordEncoder.encode(userEntity.getPassword()));
-         return  userRepository.save(userEntity1);
+        return userRepository.save(userEntity1);
     }
 }

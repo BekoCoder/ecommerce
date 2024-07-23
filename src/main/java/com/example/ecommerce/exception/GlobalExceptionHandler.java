@@ -16,14 +16,17 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleDataNotFoundException(DataNotFoundException ex) {
         return new ResponseEntity<>("Ma'lumot topilmadi", HttpStatus.NOT_FOUND);
     }
+
     @ExceptionHandler(ProductNotFoundException.class)
     public ResponseEntity<String> productNotFound(ProductNotFoundException ex) {
-       return new ResponseEntity<>("Bunday turdaki mahsulot yo'q", HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>("Bunday turdaki mahsulot yo'q", HttpStatus.NOT_FOUND);
     }
+
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<String> userNotFound(UserNotFoundException ex) {
         return new ResponseEntity<>("User o'chirilgan", HttpStatus.NOT_FOUND);
     }
+
     @ExceptionHandler(FileNotFoundException.class)
     public ResponseEntity<String> fileNotFound(FileNotFoundException ex) {
         return new ResponseEntity<>("Fayl o'chirilgan yoki mavjud emas", HttpStatus.NOT_FOUND);

@@ -1,6 +1,7 @@
 package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.dto.ProductDto;
+import com.example.ecommerce.entity.ImageEntity;
 import com.example.ecommerce.entity.ProductEntity;
 import com.example.ecommerce.entity.enums.ProductEnum;
 import com.example.ecommerce.exception.DataNotFoundException;
@@ -11,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -27,7 +29,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductEntity createProduct(ProductDto product) {
+    public ProductEntity createProduct(ProductDto product) throws IOException {
         if (product.getProductEnumList() == null || product.getProductEnumList().isEmpty()) {
             product.setProductEnumList(List.of(ProductEnum.ARTEL));
         } else {
@@ -44,6 +46,14 @@ public class ProductServiceImpl implements ProductService {
         }
 
         ProductEntity productEntity = modelMapper.map(product, ProductEntity.class);
+        if (product.getFile() != null && !product.getFile().isEmpty()) {
+            ImageEntity imageEntity = new ImageEntity();
+            imageEntity.setFileName(product.getFile().getOriginalFilename());
+            imageEntity.setSize(product.getFile().getSize());
+            imageEntity.setData(product.getFile().getBytes());
+            imageEntity.setProduct(productEntity);
+            productEntity.setImage(imageEntity);
+        }
         return productRepository.save(productEntity);
 
     }
@@ -65,11 +75,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDto getProductById(Long id) {
+    public ProductEntity getProductById(Long id) {
         Optional<ProductEntity> byId = productRepository.findById(id);
-        if(byId.isEmpty()){
-            throw  new DataNotFoundException("Mahsulot topilmadi");
+        if (byId.isEmpty()) {
+            throw new DataNotFoundException("Mahsulot topilmadi");
         }
-        return modelMapper.map(byId.get(), ProductDto.class);
+        return byId.get();
     }
 }
