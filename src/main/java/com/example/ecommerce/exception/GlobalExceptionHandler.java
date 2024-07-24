@@ -19,7 +19,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ProductNotFoundException.class)
     public ResponseEntity<String> productNotFound(ProductNotFoundException ex) {
-        return new ResponseEntity<>("Bunday turdaki mahsulot yo'q", HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>("Mahsulot topilmadi", HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(UserNotFoundException.class)

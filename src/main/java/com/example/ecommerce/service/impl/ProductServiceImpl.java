@@ -71,6 +71,10 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void deletebyId(Long id) {
+        Optional<ProductEntity> byId = productRepository.findById(id);
+        if(byId.isEmpty()) {
+            throw new ProductNotFoundException("Mahsulot topilmadi");
+        }
         productRepository.deleteById(id);
     }
 
