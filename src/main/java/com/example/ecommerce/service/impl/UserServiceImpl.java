@@ -72,4 +72,8 @@ public class UserServiceImpl {
         userEntity1.setPassword(passwordEncoder.encode(userEntity.getPassword()));
         return userRepository.save(userEntity1);
     }
+
+    public List<UserEntity> getAllUsers() {
+        return userRepository.findAll();
+    }
 }

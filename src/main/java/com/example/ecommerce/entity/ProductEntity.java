@@ -23,8 +23,13 @@ public class ProductEntity extends BaseEntity {
     private String color;
     @Enumerated(value = EnumType.STRING)
     private List<ProductEnum> productEnumList;
-    @OneToOne(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "image_id")
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonManagedReference
     private ImageEntity image;
+
+    @JoinColumn(name = "categories_id")
+    @ManyToOne(cascade = CascadeType.ALL)
+    private CategoriesEntity categories;
 
 }

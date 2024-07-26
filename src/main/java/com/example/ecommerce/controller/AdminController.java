@@ -3,6 +3,7 @@ package com.example.ecommerce.controller;
 import com.example.ecommerce.dto.ProductDto;
 import com.example.ecommerce.entity.ImageEntity;
 import com.example.ecommerce.entity.ProductEntity;
+import com.example.ecommerce.entity.UserEntity;
 import com.example.ecommerce.service.ImageService;
 import com.example.ecommerce.service.ProductService;
 import com.example.ecommerce.service.impl.UserServiceImpl;
@@ -75,6 +76,12 @@ public class AdminController {
         log.trace("Accessing DELETE /api/user/delete/{}", id);
         userService.deleteById(id);
         return ResponseEntity.ok(Boolean.TRUE);
+    }
+
+    @Operation(summary = "Barcha userlarni olish")
+    @GetMapping("/get-user")
+    public ResponseEntity<List<UserEntity>> getUser() {
+       return ResponseEntity.ok(userService.getAllUsers());
     }
 
     @Operation(summary = "Rasm qo'shish")
