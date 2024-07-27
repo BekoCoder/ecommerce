@@ -32,5 +32,10 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>("Fayl o'chirilgan yoki mavjud emas", HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(CategoryException.class)
+    public ResponseEntity<String> handleCategoryException(CategoryException ex) {
+        return new ResponseEntity<>("Kategoriya topilmadi", HttpStatus.NOT_FOUND);
+    }
+
 
 }

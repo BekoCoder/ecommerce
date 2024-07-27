@@ -1,9 +1,12 @@
 package com.example.ecommerce.controller;
 
 import com.example.ecommerce.dto.ProductDto;
+import com.example.ecommerce.entity.CategoriesEntity;
 import com.example.ecommerce.entity.ImageEntity;
 import com.example.ecommerce.entity.ProductEntity;
 import com.example.ecommerce.entity.UserEntity;
+import com.example.ecommerce.exception.CategoryException;
+import com.example.ecommerce.service.CategoriesService;
 import com.example.ecommerce.service.ImageService;
 import com.example.ecommerce.service.ProductService;
 import com.example.ecommerce.service.impl.UserServiceImpl;
@@ -17,7 +20,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/admin")
@@ -28,6 +33,7 @@ public class AdminController {
     private final ProductService productService;
     private final UserServiceImpl userService;
     private final ImageService imageService;
+    private final CategoriesService categoriesService;
 
     @Operation(summary = "Mahsulot qo'shish")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -89,6 +95,47 @@ public class AdminController {
     public ResponseEntity<String> uploadImage(@RequestParam(value = "file") MultipartFile file, ImageEntity imageEntity) throws IOException {
         imageService.saveImage(file, imageEntity);
         return ResponseEntity.ok("Rasm saqlandi");
+    }
+
+    @Operation(summary = "Kategoriya qo'shish")
+    @PostMapping("/add-category")
+    public ResponseEntity<?> addCategory(@RequestBody CategoriesEntity categories){
+        log.trace("Accessing POST /api/add-category", categories);
+        return ResponseEntity.ok(categoriesService.addCategory(categories));
+    }
+
+    @Operation(summary = "Id orqali Kategoriyani olish")
+    @GetMapping("/get-category/{id}")
+    public ResponseEntity<List<CategoriesEntity>> getCategory(@PathVariable Long id) {
+        log.trace("Accessing GET /api/get-category/{}", id);
+        CategoriesEntity id1 = categoriesService.getCategoryById(id);
+           return ResponseEntity.ok(Collections.singletonList(id1));
+    }
+
+    @Operation(summary = "Barcha kategoriyalarni olish")
+    @GetMapping("/getCategory")
+    public ResponseEntity<List<CategoriesEntity>> getAllCategory() {
+        log.trace("Accessing GET /api/get-category");
+        return ResponseEntity.ok(categoriesService.getAllCategories());
+    }
+
+    @Operation(summary = "Kategoriyani o'chirish")
+    @DeleteMapping("/delete-category/{id}")
+    public ResponseEntity<?> deleteCategory(@PathVariable Long id) {
+        log.trace("Accessing DELETE /api/delete-category/{}", id);
+        categoriesService.deleteCategory(id);
+        return ResponseEntity.ok(Boolean.TRUE);
+    }
+
+    @PutMapping("/update-category/{id}")
+    public ResponseEntity<CategoriesEntity> updateCategory(@PathVariable Long id, @RequestBody Map<String, String> body) {
+        try {
+            String name = body.get("name");
+            CategoriesEntity updatedCategory = categoriesService.updateCategory(name, id);
+            return ResponseEntity.ok(updatedCategory);
+        } catch (CategoryException e) {
+            return ResponseEntity.status(404).body(null);
+        }
     }
 
 

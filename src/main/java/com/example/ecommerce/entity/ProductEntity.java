@@ -32,4 +32,7 @@ public class ProductEntity extends BaseEntity {
     @ManyToOne(cascade = CascadeType.ALL)
     private CategoriesEntity categories;
 
+//    @OneToMany(fetch = FetchType.LAZY)
+//    private OrderDetailsEntity orderDetails;
+
 }

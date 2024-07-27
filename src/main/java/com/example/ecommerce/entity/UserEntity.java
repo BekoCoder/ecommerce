@@ -1,9 +1,7 @@
 package com.example.ecommerce.entity;
 
 import com.example.ecommerce.entity.enums.UserRole;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,6 +25,10 @@ public class UserEntity extends BaseEntity implements UserDetails {
     @Enumerated(value = EnumType.STRING)
     private List<UserRole> roles;
     private Integer isDeleted = 0;
+
+
+//    @OneToMany(fetch = FetchType.LAZY)
+//    private List<OrdersEntity> orders;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
