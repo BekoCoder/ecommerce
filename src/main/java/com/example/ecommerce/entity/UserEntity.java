@@ -27,8 +27,8 @@ public class UserEntity extends BaseEntity implements UserDetails {
     private Integer isDeleted = 0;
 
 
-//    @OneToMany(fetch = FetchType.LAZY)
-//    private List<OrdersEntity> orders;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userId")
+    private List<OrdersEntity> orders;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

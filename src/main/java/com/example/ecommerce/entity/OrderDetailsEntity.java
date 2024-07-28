@@ -20,13 +20,13 @@ public class OrderDetailsEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @JoinColumn(name = "product_id")
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    private ProductEntity product;
-//
-//    @JoinColumn(name = "order_id")
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    private OrdersEntity orders;
+    @JoinColumn(name = "product_id", referencedColumnName = "id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private ProductEntity product;
+
+    @JoinColumn(name = "order_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private OrdersEntity orders;
 
     private Double quantity;
 

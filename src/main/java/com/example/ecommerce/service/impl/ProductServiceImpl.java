@@ -25,7 +25,11 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductEntity> getAllProducts() {
-        return productRepository.findAll();
+        List<ProductEntity> all = productRepository.findAll();
+        if(all.isEmpty()){
+            throw new DataNotFoundException("Ma'lumot topilmadi");
+        }
+        return all;
     }
 
     @Override

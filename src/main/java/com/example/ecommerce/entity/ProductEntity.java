@@ -16,13 +16,19 @@ import java.util.List;
 @NoArgsConstructor
 @Entity(name = "products")
 public class ProductEntity extends BaseEntity {
+
     private String name;
+
     private String description;
+
     private int price;
+
     private int quantity;
+
     private String color;
     @Enumerated(value = EnumType.STRING)
     private List<ProductEnum> productEnumList;
+
     @JoinColumn(name = "image_id")
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonManagedReference
@@ -32,7 +38,7 @@ public class ProductEntity extends BaseEntity {
     @ManyToOne(cascade = CascadeType.ALL)
     private CategoriesEntity categories;
 
-//    @OneToMany(fetch = FetchType.LAZY)
-//    private OrderDetailsEntity orderDetails;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
+    private List<OrderDetailsEntity> orderDetails;
 
 }

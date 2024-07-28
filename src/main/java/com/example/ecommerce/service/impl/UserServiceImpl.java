@@ -6,6 +6,7 @@ import com.example.ecommerce.dto.RegisterRequest;
 import com.example.ecommerce.entity.UserEntity;
 import com.example.ecommerce.entity.enums.UserRole;
 import com.example.ecommerce.exception.AlreadyExistException;
+import com.example.ecommerce.exception.DataNotFoundException;
 import com.example.ecommerce.exception.UserNotFoundException;
 import com.example.ecommerce.repository.UserRepository;
 import com.example.ecommerce.service.JwtService;
@@ -35,6 +36,8 @@ public class UserServiceImpl {
             userRepository.save(userEntity);
             String jwtToken = jwtService.generateToken(userEntity);
             return AuthenticationResponse.builder()
+                    .username(userEntity.getUsername())
+                    .password(userEntity.getPassword())
                     .token(jwtToken)
                     .build();
         }
@@ -76,6 +79,10 @@ public class UserServiceImpl {
     }
 
     public List<UserEntity> getAllUsers() {
-        return userRepository.findAll();
+        List<UserEntity> all = userRepository.findAll();
+        if(all.isEmpty()) {
+            throw new DataNotFoundException("Ma'lumot topilmadi");
+        }
+        return all;
     }
 }

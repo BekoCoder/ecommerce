@@ -2,6 +2,7 @@ package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.entity.CategoriesEntity;
 import com.example.ecommerce.exception.CategoryException;
+import com.example.ecommerce.exception.DataNotFoundException;
 import com.example.ecommerce.repository.CategoriesRepository;
 import com.example.ecommerce.service.CategoriesService;
 import lombok.RequiredArgsConstructor;
@@ -54,7 +55,11 @@ public class CategoriesServiceImpl implements CategoriesService {
 
     @Override
     public List<CategoriesEntity> getAllCategories() {
-        return categoriesRepository.findAll();
+        List<CategoriesEntity> all = categoriesRepository.findAll();
+        if(all.isEmpty()){
+            throw new DataNotFoundException("Ma'lumot topilmadi");
+        }
+        return all;
     }
 
     public boolean CheckCategory(Long id) {

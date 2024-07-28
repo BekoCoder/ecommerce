@@ -24,9 +24,9 @@ public class OrdersEntity {
     private Double price;
     private Boolean status;
 
-//    @JoinColumn(name = "user_id")
-//    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-//    private Long createdBy;
+    @JoinColumn(name = "user_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private UserEntity userId;
 
     @CreationTimestamp
     private LocalDateTime createdDate;
