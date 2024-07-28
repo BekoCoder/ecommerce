@@ -51,6 +51,8 @@ public class UserServiceImpl {
         } else {
             String jwtToken = jwtService.generateToken(userEntity);
             return AuthenticationResponse.builder()
+                    .username(userEntity.getUsername())
+                    .password(userEntity.getPassword())
                     .token(jwtToken)
                     .build();
         }
