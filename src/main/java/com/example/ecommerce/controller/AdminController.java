@@ -126,7 +126,7 @@ public class AdminController {
         categoriesService.deleteCategory(id);
         return ResponseEntity.ok(Boolean.TRUE);
     }
-
+    @Operation(summary = "Kategoriyani  yangilash")
     @PutMapping("/update-category/{id}")
     public ResponseEntity<CategoriesEntity> updateCategory(@PathVariable Long id, @RequestBody Map<String, String> body) {
         try {

@@ -17,7 +17,7 @@ public class CategoriesServiceImpl implements CategoriesService {
     private final CategoriesRepository categoriesRepository;
     @Override
     public CategoriesEntity addCategory(CategoriesEntity category) {
-        if(!CheckCategory(category.getId())){
+        if(!CheckCategory(category.getName())){
             return categoriesRepository.save(category);
         }
         throw new CategoryException("Categoriya mavjud");
@@ -62,7 +62,7 @@ public class CategoriesServiceImpl implements CategoriesService {
         return all;
     }
 
-    public boolean CheckCategory(Long id) {
-       return categoriesRepository.findById(id).isPresent();
+    public boolean CheckCategory(String categoryName) {
+       return categoriesRepository.findByName(categoryName).isPresent();
     }
 }

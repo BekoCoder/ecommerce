@@ -21,5 +21,15 @@ public class UserController {
         return ResponseEntity.ok(userService.updateUser(user, userId));
     }
 
+    @Operation(summary = "Mahsulot sotib olish")
+    @PostMapping("/{userId}/purchase")
+    public ResponseEntity<String> purchaseUser(
+            @PathVariable Long userId,
+            @RequestParam(name = "productId") Long productId,
+            @RequestParam (name = "quantity") int quantity) {
+        userService.purchaseProduct(userId, productId, quantity);
+        return ResponseEntity.ok("Mahsulot muvaffaqiyatli sotib olindi");
+    }
+
 
 }

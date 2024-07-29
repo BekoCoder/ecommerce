@@ -36,6 +36,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleCategoryException(CategoryException ex) {
         return new ResponseEntity<>("Kategoriya topilmadi", HttpStatus.NOT_FOUND);
     }
-
+    @ExceptionHandler(ProductNotEnoughException.class)
+    public ResponseEntity<String> handleProductNotEnoughException(ProductNotEnoughException ex) {
+        return new ResponseEntity<>("Mahsulot yetarli emas", HttpStatus.NOT_FOUND);
+    }
 
 }

@@ -2,14 +2,22 @@ package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.dto.AuthenticationRequest;
 import com.example.ecommerce.dto.AuthenticationResponse;
+import com.example.ecommerce.dto.ProductDto;
 import com.example.ecommerce.dto.RegisterRequest;
+import com.example.ecommerce.entity.OrderDetailsEntity;
+import com.example.ecommerce.entity.OrdersEntity;
+import com.example.ecommerce.entity.ProductEntity;
 import com.example.ecommerce.entity.UserEntity;
 import com.example.ecommerce.entity.enums.UserRole;
 import com.example.ecommerce.exception.AlreadyExistException;
 import com.example.ecommerce.exception.DataNotFoundException;
+import com.example.ecommerce.exception.ProductNotEnoughException;
 import com.example.ecommerce.exception.UserNotFoundException;
+import com.example.ecommerce.repository.OrderDetailsRepository;
+import com.example.ecommerce.repository.OrdersRepository;
 import com.example.ecommerce.repository.UserRepository;
 import com.example.ecommerce.service.JwtService;
+import com.example.ecommerce.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -27,6 +35,9 @@ public class UserServiceImpl {
     private final JwtService jwtService;
     private final ModelMapper modelMapper;
     private final AuthenticationManager authenticationManager;
+    private final ProductService productService;
+    private final OrderDetailsRepository orderDetailsRepository;
+    private final OrdersRepository ordersRepository;
 
     public AuthenticationResponse register(RegisterRequest request) {
         UserEntity userEntity = modelMapper.map(request, UserEntity.class);
@@ -84,5 +95,30 @@ public class UserServiceImpl {
             throw new DataNotFoundException("Ma'lumot topilmadi");
         }
         return all;
+    }
+
+    public void purchaseProduct(Long productId, Long userId, int quantity) {
+        UserEntity userEntity = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User o'chirilgan"));
+        ProductEntity product = productService.getProductById(productId);
+        if(product.getQuantity() < quantity) {
+            throw new ProductNotEnoughException("Mahsulot yetarli emas");
+        }
+        if(product.getId()==null){
+            throw new DataNotFoundException("Ma'lumot topilmadi");
+        }
+        OrdersEntity orders=new OrdersEntity();
+        orders.setPrice((double) (product.getPrice()* quantity));
+        orders.setStatus(true);
+        orders.setUserId(userEntity);
+        ordersRepository.save(orders);
+
+        OrderDetailsEntity orderDetails = new OrderDetailsEntity();
+        orderDetails.setProduct(product);
+        orderDetails.setOrders(orders);
+        orderDetails.setQuantity((double) quantity);
+        orderDetailsRepository.save(orderDetails);
+
+        product.setQuantity(product.getQuantity() - quantity);
+        productService.updateProduct(modelMapper.map(product, ProductDto.class));
     }
 }
