@@ -91,7 +91,7 @@ public class UserServiceImpl {
 
     public List<UserEntity> getAllUsers() {
         List<UserEntity> all = userRepository.findAll();
-        if(all.isEmpty()) {
+        if (all.isEmpty()) {
             throw new DataNotFoundException("Ma'lumot topilmadi");
         }
         return all;
@@ -100,14 +100,14 @@ public class UserServiceImpl {
     public void purchaseProduct(Long productId, Long userId, int quantity) {
         UserEntity userEntity = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User o'chirilgan"));
         ProductEntity product = productService.getProductById(productId);
-        if(product.getQuantity() < quantity) {
+        if (product.getQuantity() < quantity) {
             throw new ProductNotEnoughException("Mahsulot yetarli emas");
         }
-        if(product.getId()==null){
+        if (product.getId() == null) {
             throw new DataNotFoundException("Ma'lumot topilmadi");
         }
-        OrdersEntity orders=new OrdersEntity();
-        orders.setPrice((double) (product.getPrice()* quantity));
+        OrdersEntity orders = new OrdersEntity();
+        orders.setPrice((double) (product.getPrice() * quantity));
         orders.setStatus(true);
         orders.setUserId(userEntity);
         ordersRepository.save(orders);

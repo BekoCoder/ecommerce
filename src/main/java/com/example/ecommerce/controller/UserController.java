@@ -26,7 +26,7 @@ public class UserController {
     public ResponseEntity<String> purchaseUser(
             @PathVariable Long userId,
             @RequestParam(name = "productId") Long productId,
-            @RequestParam (name = "quantity") int quantity) {
+            @RequestParam(name = "quantity") int quantity) {
         userService.purchaseProduct(userId, productId, quantity);
         return ResponseEntity.ok("Mahsulot muvaffaqiyatli sotib olindi");
     }

@@ -26,7 +26,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductEntity> getAllProducts() {
         List<ProductEntity> all = productRepository.findAll();
-        if(all.isEmpty()){
+        if (all.isEmpty()) {
             throw new DataNotFoundException("Ma'lumot topilmadi");
         }
         return all;
@@ -76,7 +76,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void deletebyId(Long id) {
         Optional<ProductEntity> byId = productRepository.findById(id);
-        if(byId.isEmpty()) {
+        if (byId.isEmpty()) {
             throw new ProductNotFoundException("Mahsulot topilmadi");
         }
         productRepository.deleteById(id);

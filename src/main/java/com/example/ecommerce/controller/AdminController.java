@@ -87,7 +87,7 @@ public class AdminController {
     @Operation(summary = "Barcha userlarni olish")
     @GetMapping("/get-user")
     public ResponseEntity<List<UserEntity>> getUser() {
-       return ResponseEntity.ok(userService.getAllUsers());
+        return ResponseEntity.ok(userService.getAllUsers());
     }
 
     @Operation(summary = "Rasm qo'shish")
@@ -99,7 +99,7 @@ public class AdminController {
 
     @Operation(summary = "Kategoriya qo'shish")
     @PostMapping("/add-category")
-    public ResponseEntity<?> addCategory(@RequestBody CategoriesEntity categories){
+    public ResponseEntity<?> addCategory(@RequestBody CategoriesEntity categories) {
         log.trace("Accessing POST /api/add-category", categories);
         return ResponseEntity.ok(categoriesService.addCategory(categories));
     }
@@ -109,7 +109,7 @@ public class AdminController {
     public ResponseEntity<List<CategoriesEntity>> getCategory(@PathVariable Long id) {
         log.trace("Accessing GET /api/get-category/{}", id);
         CategoriesEntity id1 = categoriesService.getCategoryById(id);
-           return ResponseEntity.ok(Collections.singletonList(id1));
+        return ResponseEntity.ok(Collections.singletonList(id1));
     }
 
     @Operation(summary = "Barcha kategoriyalarni olish")
@@ -126,6 +126,7 @@ public class AdminController {
         categoriesService.deleteCategory(id);
         return ResponseEntity.ok(Boolean.TRUE);
     }
+
     @Operation(summary = "Kategoriyani  yangilash")
     @PutMapping("/update-category/{id}")
     public ResponseEntity<CategoriesEntity> updateCategory(@PathVariable Long id, @RequestBody Map<String, String> body) {

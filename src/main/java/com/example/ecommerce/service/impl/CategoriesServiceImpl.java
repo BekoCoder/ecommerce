@@ -15,9 +15,10 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class CategoriesServiceImpl implements CategoriesService {
     private final CategoriesRepository categoriesRepository;
+
     @Override
     public CategoriesEntity addCategory(CategoriesEntity category) {
-        if(!CheckCategory(category.getName())){
+        if (!CheckCategory(category.getName())) {
             return categoriesRepository.save(category);
         }
         throw new CategoryException("Categoriya mavjud");
@@ -38,7 +39,7 @@ public class CategoriesServiceImpl implements CategoriesService {
     @Override
     public void deleteCategory(Long id) {
         Optional<CategoriesEntity> byId = categoriesRepository.findById(id);
-        if(byId.isEmpty()){
+        if (byId.isEmpty()) {
             throw new CategoryException("Categoriya mavjud emas");
         }
         categoriesRepository.deleteById(id);
@@ -47,7 +48,7 @@ public class CategoriesServiceImpl implements CategoriesService {
     @Override
     public CategoriesEntity getCategoryById(Long id) {
         Optional<CategoriesEntity> byId = categoriesRepository.findById(id);
-        if(byId.isEmpty()){
+        if (byId.isEmpty()) {
             throw new CategoryException("Categoriya mavjud emas");
         }
         return byId.get();
@@ -56,13 +57,13 @@ public class CategoriesServiceImpl implements CategoriesService {
     @Override
     public List<CategoriesEntity> getAllCategories() {
         List<CategoriesEntity> all = categoriesRepository.findAll();
-        if(all.isEmpty()){
+        if (all.isEmpty()) {
             throw new DataNotFoundException("Ma'lumot topilmadi");
         }
         return all;
     }
 
     public boolean CheckCategory(String categoryName) {
-       return categoriesRepository.findByName(categoryName).isPresent();
+        return categoriesRepository.findByName(categoryName).isPresent();
     }
 }
