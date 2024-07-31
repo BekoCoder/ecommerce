@@ -1,5 +1,7 @@
 package com.example.ecommerce.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,11 +23,13 @@ public class OrderDetailsEntity {
     private Long id;
 
     @JoinColumn(name = "product_id", referencedColumnName = "id")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
+    @JsonBackReference
     private ProductEntity product;
 
     @JoinColumn(name = "order_id")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
+    @JsonBackReference
     private OrdersEntity orders;
 
     private Double quantity;

@@ -1,12 +1,17 @@
 package com.example.ecommerce.controller;
 
+import com.example.ecommerce.entity.OrderDetailsEntity;
+import com.example.ecommerce.entity.OrdersEntity;
 import com.example.ecommerce.entity.UserEntity;
 import com.example.ecommerce.service.impl.UserServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/user")
@@ -29,6 +34,13 @@ public class UserController {
             @RequestParam(name = "quantity") int quantity) {
         userService.purchaseProduct(userId, productId, quantity);
         return ResponseEntity.ok("Mahsulot muvaffaqiyatli sotib olindi");
+    }
+
+    @Operation(summary = "User o'zi sotib olgan mahsulotlarni ko'rish")
+    @GetMapping("/{userId}/purchases")
+    public ResponseEntity<List<OrdersEntity>> purchaseUsers(@PathVariable Long userId) {
+        return ResponseEntity.ok(userService.getUserPurchases(userId));
+
     }
 
 

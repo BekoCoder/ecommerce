@@ -1,6 +1,7 @@
 package com.example.ecommerce.controller;
 
 import com.example.ecommerce.dto.ProductDto;
+import com.example.ecommerce.dto.UserDto;
 import com.example.ecommerce.entity.CategoriesEntity;
 import com.example.ecommerce.entity.ImageEntity;
 import com.example.ecommerce.entity.ProductEntity;
@@ -86,8 +87,15 @@ public class AdminController {
 
     @Operation(summary = "Barcha userlarni olish")
     @GetMapping("/get-user")
-    public ResponseEntity<List<UserEntity>> getUser() {
+    public ResponseEntity<List<UserDto>> getUser() {
         return ResponseEntity.ok(userService.getAllUsers());
+    }
+
+    @Operation(summary = "Userni id orqali olish")
+    @GetMapping("/getUserById/{id}")
+    public ResponseEntity<?> getUserById(@PathVariable(value = "id") Long id) {
+        log.trace("Accessing GET /api/user/get/{}", id);
+        return ResponseEntity.ok(userService.getUserById(id));
     }
 
     @Operation(summary = "Rasm qo'shish")

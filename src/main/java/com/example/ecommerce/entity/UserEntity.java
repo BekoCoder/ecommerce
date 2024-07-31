@@ -1,6 +1,7 @@
 package com.example.ecommerce.entity;
 
 import com.example.ecommerce.entity.enums.UserRole;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,7 +28,8 @@ public class UserEntity extends BaseEntity implements UserDetails {
     private Integer isDeleted = 0;
 
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userId")
+    @OneToMany(mappedBy = "userId")
+    @JsonManagedReference
     private List<OrdersEntity> orders;
 
     @Override

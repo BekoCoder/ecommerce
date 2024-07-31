@@ -1,9 +1,6 @@
 package com.example.ecommerce.service.impl;
 
-import com.example.ecommerce.dto.AuthenticationRequest;
-import com.example.ecommerce.dto.AuthenticationResponse;
-import com.example.ecommerce.dto.ProductDto;
-import com.example.ecommerce.dto.RegisterRequest;
+import com.example.ecommerce.dto.*;
 import com.example.ecommerce.entity.OrderDetailsEntity;
 import com.example.ecommerce.entity.OrdersEntity;
 import com.example.ecommerce.entity.ProductEntity;
@@ -25,7 +22,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -89,15 +88,28 @@ public class UserServiceImpl {
         return userRepository.save(userEntity1);
     }
 
-    public List<UserEntity> getAllUsers() {
+    public List<UserDto> getAllUsers() {
         List<UserEntity> all = userRepository.findAll();
         if (all.isEmpty()) {
             throw new DataNotFoundException("Ma'lumot topilmadi");
         }
-        return all;
+        List<UserDto> userDtos = new ArrayList<>();
+        for (UserEntity userEntity : all) {
+            userDtos.add(modelMapper.map(userEntity, UserDto.class));
+        }
+        return userDtos;
+
     }
 
-    public void purchaseProduct(Long productId, Long userId, int quantity) {
+    public UserDto getUserById(Long id) {
+        Optional<UserEntity> userEntity = userRepository.findById(id);
+        if (userEntity.isPresent()) {
+          return   modelMapper.map(userEntity, UserDto.class);
+        }
+        throw new UserNotFoundException("User o'chirilgan");
+    }
+
+    public void purchaseProduct(Long userId, Long productId, int quantity) {
         UserEntity userEntity = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User o'chirilgan"));
         ProductEntity product = productService.getProductById(productId);
         if (product.getQuantity() < quantity) {
@@ -107,7 +119,7 @@ public class UserServiceImpl {
             throw new DataNotFoundException("Ma'lumot topilmadi");
         }
         OrdersEntity orders = new OrdersEntity();
-        orders.setPrice((double) (product.getPrice() * quantity));
+        orders.setSum((double) (product.getPrice() * quantity));
         orders.setStatus(true);
         orders.setUserId(userEntity);
         ordersRepository.save(orders);
@@ -120,5 +132,14 @@ public class UserServiceImpl {
 
         product.setQuantity(product.getQuantity() - quantity);
         productService.updateProduct(modelMapper.map(product, ProductDto.class));
+    }
+
+    public List<OrdersEntity> getUserPurchases(Long userId) {
+        UserEntity user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("Foydalanuvchi topilmadi"));
+        List<OrdersEntity> allByCreatedBy = ordersRepository.findAllByUserId(user);
+        if(allByCreatedBy.isEmpty()){
+            throw new DataNotFoundException("Ma'lumot topilmadi");
+        }
+        return allByCreatedBy;
     }
 }
