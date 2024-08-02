@@ -24,7 +24,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<String> userNotFound(UserNotFoundException ex) {
-        return new ResponseEntity<>("User o'chirilgan", HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>("User mavjud emas", HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(FileNotFoundException.class)

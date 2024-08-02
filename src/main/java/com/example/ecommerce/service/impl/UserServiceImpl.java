@@ -13,7 +13,7 @@ import com.example.ecommerce.exception.UserNotFoundException;
 import com.example.ecommerce.repository.OrderDetailsRepository;
 import com.example.ecommerce.repository.OrdersRepository;
 import com.example.ecommerce.repository.UserRepository;
-import com.example.ecommerce.service.JwtService;
+import com.example.ecommerce.jwt_utils.JwtService;
 import com.example.ecommerce.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;

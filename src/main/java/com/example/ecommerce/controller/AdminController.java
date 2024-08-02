@@ -37,7 +37,7 @@ public class AdminController {
     private final CategoriesService categoriesService;
 
     @Operation(summary = "Mahsulot qo'shish")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/create")
     public ResponseEntity<?> create(@ModelAttribute ProductDto product) throws IOException {
         log.trace("Accessing product: {}", product);

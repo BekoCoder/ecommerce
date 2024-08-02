@@ -1,7 +1,6 @@
-package com.example.ecommerce.config;
+package com.example.ecommerce.jwt_utils;
 
 import com.example.ecommerce.service.AuthService;
-import com.example.ecommerce.service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

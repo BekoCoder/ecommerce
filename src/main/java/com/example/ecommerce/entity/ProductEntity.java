@@ -38,7 +38,7 @@ public class ProductEntity extends BaseEntity {
     @ManyToOne(cascade = CascadeType.ALL)
     private CategoriesEntity categories;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "product", fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
     @JsonManagedReference
     private List<OrderDetailsEntity> orderDetails;
 
