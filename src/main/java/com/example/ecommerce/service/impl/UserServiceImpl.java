@@ -10,21 +10,28 @@ import com.example.ecommerce.exception.AlreadyExistException;
 import com.example.ecommerce.exception.DataNotFoundException;
 import com.example.ecommerce.exception.ProductNotEnoughException;
 import com.example.ecommerce.exception.UserNotFoundException;
+import com.example.ecommerce.jwt_utils.JwtService;
+import com.example.ecommerce.qrcode.QrCode;
 import com.example.ecommerce.repository.OrderDetailsRepository;
 import com.example.ecommerce.repository.OrdersRepository;
 import com.example.ecommerce.repository.UserRepository;
-import com.example.ecommerce.jwt_utils.JwtService;
 import com.example.ecommerce.service.ProductService;
+import com.google.zxing.WriterException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -104,12 +111,12 @@ public class UserServiceImpl {
     public UserDto getUserById(Long id) {
         Optional<UserEntity> userEntity = userRepository.findById(id);
         if (userEntity.isPresent()) {
-          return   modelMapper.map(userEntity, UserDto.class);
+            return modelMapper.map(userEntity, UserDto.class);
         }
         throw new UserNotFoundException("User o'chirilgan");
     }
 
-    public void purchaseProduct(Long userId, Long productId, int quantity) {
+    public void buyProduct(Long userId, Long productId, int quantity) {
         UserEntity userEntity = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User o'chirilgan"));
         ProductEntity product = productService.getProductById(productId);
         if (product.getQuantity() < quantity) {
@@ -137,9 +144,27 @@ public class UserServiceImpl {
     public List<OrdersEntity> getUserPurchases(Long userId) {
         UserEntity user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("Foydalanuvchi topilmadi"));
         List<OrdersEntity> allByCreatedBy = ordersRepository.findAllByUserId(user);
-        if(allByCreatedBy.isEmpty()){
+        if (allByCreatedBy.isEmpty()) {
             throw new DataNotFoundException("Ma'lumot topilmadi");
         }
         return allByCreatedBy;
     }
+
+    public ResponseEntity<byte[]> getUserBuyProductWithQrCode(Long userId) throws IOException, WriterException {
+        UserEntity userEntity = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("Ma'lumot topilmadi"));
+        List<OrdersEntity> orders = ordersRepository.findAllByUserId(userEntity);
+        String buyProduct = orders.stream()
+                .flatMap(order -> order.getOrderDetails().stream())
+                .map(orderDetails -> "Product: " + orderDetails.getProduct().getName() + " Quantity: " + orderDetails.getQuantity())
+                .collect(Collectors.joining("\n"));
+
+
+        byte[] bytes = QrCode.generateQrCodeImages(buyProduct, 300, 300);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(HttpHeaders.CONTENT_TYPE, "image/png");
+        headers.set(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"qrcode.png\"");
+        return new ResponseEntity<>(bytes, headers, HttpStatus.OK);
+    }
+
+
 }

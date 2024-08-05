@@ -4,6 +4,7 @@ import com.example.ecommerce.entity.OrderDetailsEntity;
 import com.example.ecommerce.entity.OrdersEntity;
 import com.example.ecommerce.entity.UserEntity;
 import com.example.ecommerce.service.impl.UserServiceImpl;
+import com.google.zxing.WriterException;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -32,7 +34,7 @@ public class UserController {
             @PathVariable Long userId,
             @RequestParam(name = "productId") Long productId,
             @RequestParam(name = "quantity") int quantity) {
-        userService.purchaseProduct(userId, productId, quantity);
+        userService.buyProduct(userId, productId, quantity);
         return ResponseEntity.ok("Mahsulot muvaffaqiyatli sotib olindi");
     }
 
@@ -41,6 +43,12 @@ public class UserController {
     public ResponseEntity<List<OrdersEntity>> purchaseUsers(@PathVariable Long userId) {
         return ResponseEntity.ok(userService.getUserPurchases(userId));
 
+    }
+
+    @Operation(summary = "Sotib olgan mahsulotlarining QrCode")
+    @GetMapping("/{userId}/buy/qrcode")
+    public ResponseEntity<byte[]> buyQRCode(@PathVariable Long userId) throws IOException, WriterException {
+        return userService.getUserBuyProductWithQrCode(userId);
     }
 
 
