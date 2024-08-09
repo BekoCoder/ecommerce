@@ -1,14 +1,14 @@
 package com.example.ecommerce.controller;
 
+import com.example.ecommerce.dto.UserDto;
 import com.example.ecommerce.entity.OrderDetailsEntity;
 import com.example.ecommerce.entity.OrdersEntity;
-import com.example.ecommerce.entity.UserEntity;
 import com.example.ecommerce.service.impl.UserServiceImpl;
 import com.google.zxing.WriterException;
 import io.swagger.v3.oas.annotations.Operation;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,23 +24,38 @@ public class UserController {
 
     @Operation(summary = "Userni yangilash")
     @PutMapping("/update")
-    public ResponseEntity<UserEntity> updateUser(@RequestBody UserEntity user, @RequestParam(value = "userId", required = false) Long userId) {
+    public ResponseEntity<UserDto> updateUser(@RequestBody UserDto user, @RequestParam(value = "userId", required = false) Long userId) {
         return ResponseEntity.ok(userService.updateUser(user, userId));
     }
 
-    @Operation(summary = "Mahsulot sotib olish")
-    @PostMapping("/{userId}/purchase")
-    public ResponseEntity<String> purchaseUser(
-            @PathVariable Long userId,
-            @RequestParam(name = "productId") Long productId,
-            @RequestParam(name = "quantity") int quantity) {
-        userService.buyProduct(userId, productId, quantity);
-        return ResponseEntity.ok("Mahsulot muvaffaqiyatli sotib olindi");
+    @Operation(summary = "Mahsulotni Bucketga qo'shish")
+    @PostMapping("/add-Bucket")
+    public ResponseEntity<String> addToBucket(@RequestParam Long userId, @RequestParam Long productId, int quantity) {
+        try {
+            userService.addProductToBucket(userId, productId, quantity);
+            return ResponseEntity.ok("Mahsulot Bucketga qo'shildi");
+        }
+        catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Xato " + e.getMessage());
+        }
     }
+
+    @Operation(summary = "Sotib olish")
+    @PostMapping("/buy")
+    public ResponseEntity<String> buy(@RequestParam Long userId) {
+        try {
+            userService.checkOut(userId);
+            return ResponseEntity.ok("Sotib olish");
+        }
+        catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Xato " + e.getMessage());
+        }
+    }
+
 
     @Operation(summary = "User o'zi sotib olgan mahsulotlarni ko'rish")
     @GetMapping("/{userId}/purchases")
-    public ResponseEntity<List<OrdersEntity>> purchaseUsers(@PathVariable Long userId) {
+    public ResponseEntity<List<OrderDetailsEntity>> purchaseUsers(@PathVariable Long userId) {
         return ResponseEntity.ok(userService.getUserPurchases(userId));
 
     }
