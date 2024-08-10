@@ -1,5 +1,7 @@
 package com.example.ecommerce.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,5 +24,6 @@ public class CategoriesEntity {
     private String name;
 
     @OneToMany(mappedBy = "categories")
+    @JsonBackReference
     private List<ProductEntity> products;
 }

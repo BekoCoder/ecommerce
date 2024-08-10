@@ -1,5 +1,6 @@
 package com.example.ecommerce.controller;
 
+import com.example.ecommerce.dto.CategoriesDto;
 import com.example.ecommerce.dto.ProductDto;
 import com.example.ecommerce.dto.UserDto;
 import com.example.ecommerce.entity.CategoriesEntity;
@@ -107,9 +108,10 @@ public class AdminController {
 
     @Operation(summary = "Kategoriya qo'shish")
     @PostMapping("/add-category")
-    public ResponseEntity<?> addCategory(@RequestBody CategoriesEntity categories) {
+    public ResponseEntity<?> addCategory(@RequestBody CategoriesDto categories) {
         log.trace("Accessing POST /api/add-category", categories);
-        return ResponseEntity.ok(categoriesService.addCategory(categories));
+        categoriesService.addCategory(categories);
+        return ResponseEntity.ok("Kategoriya saqlandi");
     }
 
     @Operation(summary = "Id orqali Kategoriyani olish")

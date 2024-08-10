@@ -1,6 +1,7 @@
 package com.example.ecommerce.entity;
 
 import com.example.ecommerce.entity.enums.ProductEnum;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -34,8 +35,9 @@ public class ProductEntity extends BaseEntity {
     @JsonManagedReference
     private ImageEntity image;
 
+    @ManyToOne
     @JoinColumn(name = "categories_id")
-    @ManyToOne(cascade = CascadeType.ALL)
+    @JsonManagedReference
     private CategoriesEntity categories;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")

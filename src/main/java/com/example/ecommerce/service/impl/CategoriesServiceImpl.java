@@ -1,11 +1,14 @@
 package com.example.ecommerce.service.impl;
 
+import com.example.ecommerce.dto.CategoriesDto;
 import com.example.ecommerce.entity.CategoriesEntity;
 import com.example.ecommerce.exception.CategoryException;
+import com.example.ecommerce.exception.CustomException;
 import com.example.ecommerce.exception.DataNotFoundException;
 import com.example.ecommerce.repository.CategoriesRepository;
 import com.example.ecommerce.service.CategoriesService;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,13 +18,15 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class CategoriesServiceImpl implements CategoriesService {
     private final CategoriesRepository categoriesRepository;
+    private final ModelMapper modelMapper;
 
     @Override
-    public CategoriesEntity addCategory(CategoriesEntity category) {
+    public CategoriesEntity addCategory(CategoriesDto category) {
         if (!CheckCategory(category.getName())) {
-            return categoriesRepository.save(category);
+            CategoriesEntity categoriesEntity = modelMapper.map(category, CategoriesEntity.class);
+            return categoriesRepository.save(categoriesEntity);
         }
-        throw new CategoryException("Categoriya mavjud");
+        throw new CustomException("Categoriya mavjud");
     }
 
     @Override
