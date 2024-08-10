@@ -65,7 +65,7 @@ public class UserServiceImpl {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
         } catch (BadCredentialsException e) {
-            throw new AuthException("Parol yoki username xato kiritildi!!!");
+            throw new CustomException("Parol yoki username xato kiritildi!!!");
         }
         UserEntity userEntity = userRepository.findByUsername(request.getUsername()).orElseThrow();
         if (userEntity.getIsDeleted() == 1) {
@@ -154,7 +154,7 @@ public class UserServiceImpl {
         List<OrdersEntity> orders = ordersRepository.findAllByUserId(user);
 
         if (orders.isEmpty()) {
-            throw new DataNotFoundException("Ma'lumot topilmadi");
+            throw new CustomException("Ma'lumot topilmadi");
         }
         if (user.getIsDeleted() == 1) {
             throw new CustomException("Foydalanuvchi topilmadi");

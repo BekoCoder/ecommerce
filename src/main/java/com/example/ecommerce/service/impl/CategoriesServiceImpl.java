@@ -2,7 +2,6 @@ package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.dto.CategoriesDto;
 import com.example.ecommerce.entity.CategoriesEntity;
-import com.example.ecommerce.exception.CategoryException;
 import com.example.ecommerce.exception.CustomException;
 import com.example.ecommerce.exception.DataNotFoundException;
 import com.example.ecommerce.repository.CategoriesRepository;
@@ -26,7 +25,7 @@ public class CategoriesServiceImpl implements CategoriesService {
             CategoriesEntity categoriesEntity = modelMapper.map(category, CategoriesEntity.class);
             return categoriesRepository.save(categoriesEntity);
         }
-        throw new CustomException("Categoriya mavjud");
+        throw new CustomException("Kategoriya mavjud");
     }
 
     @Override
@@ -37,7 +36,7 @@ public class CategoriesServiceImpl implements CategoriesService {
             category.setName(categoryName);
             return categoriesRepository.save(category);
         } else {
-            throw new CategoryException("Categoriya mavjud emas");
+            throw new CustomException("Kategoriya mavjud emas");
         }
     }
 
@@ -45,7 +44,7 @@ public class CategoriesServiceImpl implements CategoriesService {
     public void deleteCategory(Long id) {
         Optional<CategoriesEntity> byId = categoriesRepository.findById(id);
         if (byId.isEmpty()) {
-            throw new CategoryException("Categoriya mavjud emas");
+            throw new CustomException("Kategoriya mavjud emas");
         }
         categoriesRepository.deleteById(id);
     }
@@ -54,7 +53,7 @@ public class CategoriesServiceImpl implements CategoriesService {
     public CategoriesEntity getCategoryById(Long id) {
         Optional<CategoriesEntity> byId = categoriesRepository.findById(id);
         if (byId.isEmpty()) {
-            throw new CategoryException("Categoriya mavjud emas");
+            throw new CustomException("Kategoriya mavjud emas");
         }
         return byId.get();
     }

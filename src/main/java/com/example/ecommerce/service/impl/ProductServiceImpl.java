@@ -4,6 +4,7 @@ import com.example.ecommerce.dto.ProductDto;
 import com.example.ecommerce.entity.ImageEntity;
 import com.example.ecommerce.entity.ProductEntity;
 import com.example.ecommerce.entity.enums.ProductEnum;
+import com.example.ecommerce.exception.CustomException;
 import com.example.ecommerce.exception.DataNotFoundException;
 import com.example.ecommerce.exception.ProductNotFoundException;
 import com.example.ecommerce.repository.ProductRepository;
@@ -42,10 +43,10 @@ public class ProductServiceImpl implements ProductService {
                 if (Arrays.asList(ProductEnum.values()).contains(singleProductEnum)) {
                     product.setProductEnumList(List.of(singleProductEnum));
                 } else {
-                    throw new ProductNotFoundException("Bunday turdagi mahsulot yo'q");
+                    throw new CustomException("Bunday turdagi mahsulot yo'q");
                 }
             } else {
-                throw new ProductNotFoundException("Bittadan ortiq mahsulot turini kirita olmaysiz");
+                throw new CustomException("Bittadan ortiq mahsulot turini kirita olmaysiz");
             }
         }
 
@@ -77,7 +78,7 @@ public class ProductServiceImpl implements ProductService {
     public void deletebyId(Long id) {
         Optional<ProductEntity> byId = productRepository.findById(id);
         if (byId.isEmpty()) {
-            throw new ProductNotFoundException("Mahsulot topilmadi");
+            throw new CustomException("Mahsulot topilmadi");
         }
         productRepository.deleteById(id);
     }

@@ -6,8 +6,7 @@ import com.example.ecommerce.dto.UserDto;
 import com.example.ecommerce.entity.CategoriesEntity;
 import com.example.ecommerce.entity.ImageEntity;
 import com.example.ecommerce.entity.ProductEntity;
-import com.example.ecommerce.entity.UserEntity;
-import com.example.ecommerce.exception.CategoryException;
+import com.example.ecommerce.exception.CustomException;
 import com.example.ecommerce.service.CategoriesService;
 import com.example.ecommerce.service.ImageService;
 import com.example.ecommerce.service.ProductService;
@@ -144,7 +143,7 @@ public class AdminController {
             String name = body.get("name");
             CategoriesEntity updatedCategory = categoriesService.updateCategory(name, id);
             return ResponseEntity.ok(updatedCategory);
-        } catch (CategoryException e) {
+        } catch (CustomException e) {
             return ResponseEntity.status(404).body(null);
         }
     }

@@ -32,15 +32,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>("Fayl o'chirilgan yoki mavjud emas", HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(CategoryException.class)
-    public ResponseEntity<String> handleCategoryException(CategoryException ex) {
-        return new ResponseEntity<>("Kategoriya topilmadi", HttpStatus.NOT_FOUND);
-    }
 
-    @ExceptionHandler(ProductNotEnoughException.class)
-    public ResponseEntity<String> handleProductNotEnoughException(ProductNotEnoughException ex) {
-        return new ResponseEntity<>("Mahsulot yetarli emas", HttpStatus.NOT_FOUND);
-    }
 
     @ExceptionHandler(AuthException.class)
     public ResponseEntity<String> handleAuthException(AuthException ex) {
