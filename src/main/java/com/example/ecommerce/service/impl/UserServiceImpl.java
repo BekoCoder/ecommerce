@@ -10,14 +10,15 @@ import com.example.ecommerce.entity.ProductEntity;
 import com.example.ecommerce.entity.UserEntity;
 import com.example.ecommerce.entity.enums.OrderStatus;
 import com.example.ecommerce.entity.enums.UserRole;
-import com.example.ecommerce.exception.*;
+import com.example.ecommerce.exception.CustomException;
+import com.example.ecommerce.exception.DataNotFoundException;
+import com.example.ecommerce.exception.ProductNotFoundException;
+import com.example.ecommerce.exception.UserNotFoundException;
 import com.example.ecommerce.jwt_utils.JwtService;
 import com.example.ecommerce.qrcode.QrCode;
-import com.example.ecommerce.repository.OrderDetailsRepository;
 import com.example.ecommerce.repository.OrdersRepository;
 import com.example.ecommerce.repository.ProductRepository;
 import com.example.ecommerce.repository.UserRepository;
-import com.example.ecommerce.service.ProductService;
 import com.google.zxing.WriterException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -44,8 +45,6 @@ public class UserServiceImpl {
     private final JwtService jwtService;
     private final ModelMapper modelMapper;
     private final AuthenticationManager authenticationManager;
-    private final ProductService productService;
-    private final OrderDetailsRepository orderDetailsRepository;
     private final OrdersRepository ordersRepository;
     private final ProductRepository productRepository;
 
@@ -90,6 +89,7 @@ public class UserServiceImpl {
         UserEntity userEntity1 = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User o'chirilgan"));
         userEntity1.setUsername(userDto.getUsername());
         userEntity1.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        userRepository.save(userEntity1);
         return modelMapper.map(userEntity1, UserDto.class);
     }
 
@@ -122,6 +122,9 @@ public class UserServiceImpl {
             order.setUserId(userEntity);
             order.setStatus(OrderStatus.BUCKET);
         }
+        if(product.getQuantity()<quantity){
+            throw  new CustomException("Mahsulot miqdori yetmaydi");
+        }
         OrderDetailsEntity orderDetails = new OrderDetailsEntity();
         orderDetails.setOrders(order);
         orderDetails.setProduct(product);
@@ -138,9 +141,6 @@ public class UserServiceImpl {
         for (OrderDetailsEntity orderDetails : orders.getOrderDetails()) {
             ProductEntity product = orderDetails.getProduct();
             double amount = product.getQuantity() - orderDetails.getQuantity();
-            if (amount < 0) {
-                throw new CustomException("Mahsulot miqdori yetmaydi");
-            }
             product.setQuantity((int) amount);
             productRepository.save(product);
         }
@@ -180,7 +180,7 @@ public class UserServiceImpl {
                         + " \nSum: " + orderDetails.getProduct().getPrice() * orderDetails.getQuantity())
                 .collect(Collectors.joining("\n"));
         if (buyProduct.isEmpty()) {
-            throw new CustomException("Buyurtmalar mavjud emas yoki bo'sh.");
+            throw new CustomException("Buyurtmalar mavjud emas");
         }
         byte[] bytes = QrCode.generateQrCodeImages(buyProduct, 300, 300);
         HttpHeaders headers = new HttpHeaders();

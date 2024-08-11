@@ -24,7 +24,7 @@ public class UserController {
 
     @Operation(summary = "Userni yangilash")
     @PutMapping("/update")
-    public ResponseEntity<UserDto> updateUser(@RequestBody UserDto user, @RequestParam(value = "userId", required = false) Long userId) {
+    public ResponseEntity<UserDto> updateUser(@RequestBody UserDto user, @RequestParam(value = "userId") Long userId) {
         return ResponseEntity.ok(userService.updateUser(user, userId));
     }
 
@@ -33,7 +33,7 @@ public class UserController {
     public ResponseEntity<String> addToBucket(@RequestParam Long userId, @RequestParam Long productId, int quantity) {
         try {
             userService.addProductToBucket(userId, productId, quantity);
-            return ResponseEntity.ok("Mahsulot Bucketga qo'shildi");
+            return ResponseEntity.ok("Mahsulot Savatga qo'shildi");
         }
         catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Xato " + e.getMessage());
@@ -45,7 +45,7 @@ public class UserController {
     public ResponseEntity<String> buy(@RequestParam Long userId) {
         try {
             userService.checkOut(userId);
-            return ResponseEntity.ok("Sotib olish");
+            return ResponseEntity.ok("Muvaffaqiyatli sotib olindi");
         }
         catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Xato " + e.getMessage());

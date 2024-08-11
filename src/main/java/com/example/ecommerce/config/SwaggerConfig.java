@@ -10,12 +10,23 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.StringUtils;
 
+import java.util.Arrays;
+
 @Configuration
 public class SwaggerConfig {
     @Bean
     public OpenAPI customOpenAPI() {
         final String securitySchemeName = "Bearer Token";
         final String apiTitle = String.format(StringUtils.capitalize("Ecommerce API"));
+        final String [] developers={"Mirzayev Bekzod"};
+        final String apiDescription = String.format("""
+                        Ushbu REST API %s uchun yaratilgan.\s
+
+                        Dasturchi: %s
+                        """,
+                apiTitle,
+                Arrays.toString(developers)
+        );
 
         return new OpenAPI()
                 .addServersItem(new Server().url("/ecommerce-api").description("Root API server"))
@@ -33,6 +44,7 @@ public class SwaggerConfig {
                 .info(new Info()
                         .title(apiTitle)
                         .version("2.0")
+                        .description(apiDescription)
                 )
                 .addSecurityItem(new SecurityRequirement().addList(securitySchemeName)
                 );

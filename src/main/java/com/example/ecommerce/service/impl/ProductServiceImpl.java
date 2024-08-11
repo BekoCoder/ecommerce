@@ -1,12 +1,14 @@
 package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.dto.ProductDto;
+import com.example.ecommerce.entity.CategoriesEntity;
 import com.example.ecommerce.entity.ImageEntity;
 import com.example.ecommerce.entity.ProductEntity;
 import com.example.ecommerce.entity.enums.ProductEnum;
 import com.example.ecommerce.exception.CustomException;
 import com.example.ecommerce.exception.DataNotFoundException;
 import com.example.ecommerce.exception.ProductNotFoundException;
+import com.example.ecommerce.repository.CategoriesRepository;
 import com.example.ecommerce.repository.ProductRepository;
 import com.example.ecommerce.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,7 @@ import java.util.Optional;
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final ModelMapper modelMapper;
+    private final CategoriesRepository categoriesRepository;
 
     @Override
     public List<ProductEntity> getAllProducts() {
@@ -51,6 +54,8 @@ public class ProductServiceImpl implements ProductService {
         }
 
         ProductEntity productEntity = modelMapper.map(product, ProductEntity.class);
+        CategoriesEntity categories = categoriesRepository.findById(product.getCategoryId()).orElseThrow(() -> new CustomException("Kategoriya topilmadi"));
+        productEntity.setCategories(categories);
         if (product.getFile() != null && !product.getFile().isEmpty()) {
             ImageEntity imageEntity = new ImageEntity();
             imageEntity.setFileName(product.getFile().getOriginalFilename());

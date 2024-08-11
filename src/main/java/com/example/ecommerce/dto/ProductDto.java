@@ -2,16 +2,12 @@ package com.example.ecommerce.dto;
 
 import com.example.ecommerce.entity.enums.ProductEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
+import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-@Setter
-@Getter
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
+@Data
 @Schema(description = "Mahsulot bo'yicha ma'lumotlar")
 public class ProductDto {
     @Schema(description = "Mahsulot Id si")
@@ -26,6 +22,9 @@ public class ProductDto {
     private int quantity;
     @Schema(description = "Rangi")
     private String color;
+
+    @Schema(description = "Kategoriya Id si")
+    private Long categoryId;
 
     private List<ProductEnum> productEnumList;
 
