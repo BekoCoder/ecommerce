@@ -151,7 +151,7 @@ public class UserServiceImpl {
         UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("Foydalanuvchi topilmadi"));
 
-        List<OrdersEntity> orders = ordersRepository.findAllByUserId(user);
+        List<OrdersEntity> orders = ordersRepository.findAllByUserIdAndStatusNot(user, OrderStatus.BUCKET);
 
         if (orders.isEmpty()) {
             throw new CustomException("Ma'lumot topilmadi");
@@ -172,7 +172,7 @@ public class UserServiceImpl {
     public ResponseEntity<byte[]> getUserBuyProductWithQrCode(Long userId) throws IOException, WriterException {
         UserEntity userEntity = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("Ma'lumot topilmadi"));
-        List<OrdersEntity> orders = ordersRepository.findAllByUserId(userEntity);
+        List<OrdersEntity> orders = ordersRepository.findAllByUserIdAndStatusNot(userEntity, OrderStatus.BUCKET);
         String buyProduct = orders.stream()
                 .flatMap(order -> order.getOrderDetails().stream())
                 .map(orderDetails -> "Product: " + orderDetails.getProduct().getName()
