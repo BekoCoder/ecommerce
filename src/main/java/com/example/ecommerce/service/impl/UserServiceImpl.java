@@ -13,7 +13,6 @@ import com.example.ecommerce.entity.enums.UserRole;
 import com.example.ecommerce.exception.CustomException;
 import com.example.ecommerce.exception.DataNotFoundException;
 import com.example.ecommerce.exception.ProductNotFoundException;
-import com.example.ecommerce.exception.UserNotFoundException;
 import com.example.ecommerce.jwt_utils.JwtService;
 import com.example.ecommerce.qrcode.QrCode;
 import com.example.ecommerce.repository.OrdersRepository;
@@ -69,7 +68,7 @@ public class UserServiceImpl implements UserService {
         }
         UserEntity userEntity = userRepository.findByUsername(request.getUsername()).orElseThrow();
         if (userEntity.getIsDeleted() == 1) {
-            throw new UserNotFoundException("User o'chirilgan!!!");
+            throw new CustomException("User o'chirilgan!!!");
         } else {
             String jwtToken = jwtService.generateToken(userEntity);
             return AuthenticationResponse.builder().username(userEntity.getUsername()).password(userEntity.getPassword()).token(jwtToken).build();
@@ -81,13 +80,13 @@ public class UserServiceImpl implements UserService {
     }
 
     public void deleteById(Long id) {
-        UserEntity userEntity = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User o'chirilgan"));
+        UserEntity userEntity = userRepository.findById(id).orElseThrow(() -> new CustomException("User o'chirilgan"));
         userEntity.setIsDeleted(1);
         userRepository.save(userEntity);
     }
 
     public UserDto updateUser(UserDto userDto, Long id) {
-        UserEntity userEntity1 = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User o'chirilgan"));
+        UserEntity userEntity1 = userRepository.findById(id).orElseThrow(() -> new CustomException("User o'chirilgan"));
         userEntity1.setUsername(userDto.getUsername());
         userEntity1.setPassword(passwordEncoder.encode(userDto.getPassword()));
         userRepository.save(userEntity1);
@@ -112,19 +111,22 @@ public class UserServiceImpl implements UserService {
         if (userEntity.isPresent()) {
             return modelMapper.map(userEntity, UserDto.class);
         }
-        throw new UserNotFoundException("User o'chirilgan");
+        throw new CustomException("User o'chirilgan");
     }
 
     public void addProductToBucket(Long userId, Long productId, int quantity) {
-        UserEntity userEntity = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User o'chirilgan"));
+        UserEntity userEntity = userRepository.findById(userId).orElseThrow(() -> new CustomException("User o'chirilgan"));
         ProductEntity product = productRepository.findById(productId).orElseThrow(() -> new ProductNotFoundException("Product o'chirilgan"));
         OrdersEntity order = ordersRepository.findByUserIdAndStatus(userEntity, OrderStatus.BUCKET).orElse(new OrdersEntity());
+        if (userEntity.getIsDeleted() == 1) {
+            throw new CustomException("User o'chirilgan");
+        }
         if (order.getId() == null) {
             order.setUserId(userEntity);
             order.setStatus(OrderStatus.BUCKET);
         }
-        if(product.getQuantity()<quantity){
-            throw  new CustomException("Mahsulot miqdori yetmaydi");
+        if (product.getQuantity() < quantity) {
+            throw new CustomException("Mahsulot miqdori yetmaydi");
         }
         OrderDetailsEntity orderDetails = new OrderDetailsEntity();
         orderDetails.setOrders(order);
@@ -136,9 +138,12 @@ public class UserServiceImpl implements UserService {
     }
 
     public void checkOut(Long userId) {
-        UserEntity userEntity = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User o'chirilgan"));
+        UserEntity userEntity = userRepository.findById(userId).orElseThrow(() -> new CustomException("User o'chirilgan"));
         OrdersEntity orders = ordersRepository.findByUserIdAndStatus(userEntity, OrderStatus.BUCKET).orElseThrow(() -> new CustomException("Buket bo'sh"));
         orders.setStatus(OrderStatus.ORDER);
+//        if(userEntity.getIsDeleted()==1){
+//            throw  new CustomException("User o'chirilgan");
+//        }
         for (OrderDetailsEntity orderDetails : orders.getOrderDetails()) {
             ProductEntity product = orderDetails.getProduct();
             double amount = product.getQuantity() - orderDetails.getQuantity();
@@ -150,7 +155,7 @@ public class UserServiceImpl implements UserService {
 
     public List<OrderDetailsEntity> getUserPurchases(Long userId) {
         UserEntity user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("Foydalanuvchi topilmadi"));
+                .orElseThrow(() -> new CustomException("Foydalanuvchi topilmadi"));
 
         List<OrdersEntity> orders = ordersRepository.findAllByUserIdAndStatusNot(user, OrderStatus.BUCKET);
 
@@ -172,7 +177,10 @@ public class UserServiceImpl implements UserService {
 
     public ResponseEntity<byte[]> getUserBuyProductWithQrCode(Long userId) throws IOException, WriterException {
         UserEntity userEntity = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("Ma'lumot topilmadi"));
+                .orElseThrow(() -> new CustomException("Ma'lumot topilmadi"));
+        if (userEntity.getIsDeleted() == 1) {
+            throw new CustomException("Foydalanuvchi o'chirilgan");
+        }
         List<OrdersEntity> orders = ordersRepository.findAllByUserIdAndStatusNot(userEntity, OrderStatus.BUCKET);
         String buyProduct = orders.stream()
                 .flatMap(order -> order.getOrderDetails().stream())

@@ -7,7 +7,6 @@ import com.example.ecommerce.entity.ProductEntity;
 import com.example.ecommerce.entity.enums.ProductEnum;
 import com.example.ecommerce.exception.CustomException;
 import com.example.ecommerce.exception.DataNotFoundException;
-import com.example.ecommerce.exception.ProductNotFoundException;
 import com.example.ecommerce.repository.CategoriesRepository;
 import com.example.ecommerce.repository.ProductRepository;
 import com.example.ecommerce.service.ProductService;
@@ -31,7 +30,7 @@ public class ProductServiceImpl implements ProductService {
     public List<ProductEntity> getAllProducts() {
         List<ProductEntity> all = productRepository.findAll();
         if (all.isEmpty()) {
-            throw new DataNotFoundException("Ma'lumot topilmadi");
+            throw new CustomException("Ma'lumot topilmadi");
         }
         return all;
     }
@@ -92,7 +91,7 @@ public class ProductServiceImpl implements ProductService {
     public ProductEntity getProductById(Long id) {
         Optional<ProductEntity> byId = productRepository.findById(id);
         if (byId.isEmpty()) {
-            throw new DataNotFoundException("Mahsulot topilmadi");
+            throw new CustomException("Mahsulot topilmadi");
         }
         return byId.get();
     }

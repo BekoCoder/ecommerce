@@ -1,7 +1,7 @@
 package com.example.ecommerce.service.impl;
 
 import com.example.ecommerce.entity.ImageEntity;
-import com.example.ecommerce.exception.ImageNotFoundException;
+import com.example.ecommerce.exception.CustomException;
 import com.example.ecommerce.repository.ImageRepository;
 import com.example.ecommerce.service.ImageService;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +28,6 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     public ImageEntity getImageById(Long id) {
-        return imageRepository.findById(id).orElseThrow(() -> new ImageNotFoundException("Rasm topilmadi"));
+        return imageRepository.findById(id).orElseThrow(() -> new CustomException("Rasm topilmadi"));
     }
 }

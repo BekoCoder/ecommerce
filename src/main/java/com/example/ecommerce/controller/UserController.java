@@ -6,6 +6,7 @@ import com.example.ecommerce.entity.OrdersEntity;
 import com.example.ecommerce.service.impl.UserServiceImpl;
 import com.google.zxing.WriterException;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,7 @@ import java.util.List;
 @RequestMapping("/user")
 @RequiredArgsConstructor
 @Slf4j
+@Tag(name = "user-controller", description = "  Userlar bo'yicha xizmatlar")
 public class UserController {
     private final UserServiceImpl userService;
 
@@ -36,7 +38,7 @@ public class UserController {
             return ResponseEntity.ok("Mahsulot Savatga qo'shildi");
         }
         catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Xato " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
@@ -48,7 +50,7 @@ public class UserController {
             return ResponseEntity.ok("Muvaffaqiyatli sotib olindi");
         }
         catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Xato " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
