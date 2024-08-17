@@ -30,7 +30,7 @@ public class ProductServiceImpl implements ProductService {
     public List<ProductEntity> getAllProducts() {
         List<ProductEntity> all = productRepository.findAll();
         if (all.isEmpty()) {
-            throw new CustomException("Ma'lumot topilmadi");
+            throw new CustomException("Mahsulot topilmadi");
         }
         return all;
     }

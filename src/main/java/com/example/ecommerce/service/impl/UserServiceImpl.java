@@ -12,7 +12,6 @@ import com.example.ecommerce.entity.enums.OrderStatus;
 import com.example.ecommerce.entity.enums.UserRole;
 import com.example.ecommerce.exception.CustomException;
 import com.example.ecommerce.exception.DataNotFoundException;
-import com.example.ecommerce.exception.ProductNotFoundException;
 import com.example.ecommerce.jwt_utils.JwtService;
 import com.example.ecommerce.qrcode.QrCode;
 import com.example.ecommerce.repository.OrdersRepository;
@@ -116,7 +115,7 @@ public class UserServiceImpl implements UserService {
 
     public void addProductToBucket(Long userId, Long productId, int quantity) {
         UserEntity userEntity = userRepository.findById(userId).orElseThrow(() -> new CustomException("User o'chirilgan"));
-        ProductEntity product = productRepository.findById(productId).orElseThrow(() -> new ProductNotFoundException("Product o'chirilgan"));
+        ProductEntity product = productRepository.findById(productId).orElseThrow(() -> new CustomException("Product o'chirilgan"));
         OrdersEntity order = ordersRepository.findByUserIdAndStatus(userEntity, OrderStatus.BUCKET).orElse(new OrdersEntity());
         if (userEntity.getIsDeleted() == 1) {
             throw new CustomException("User o'chirilgan");
