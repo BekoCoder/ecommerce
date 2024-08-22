@@ -140,9 +140,9 @@ public class UserServiceImpl implements UserService {
         UserEntity userEntity = userRepository.findById(userId).orElseThrow(() -> new CustomException("User o'chirilgan"));
         OrdersEntity orders = ordersRepository.findByUserIdAndStatus(userEntity, OrderStatus.BUCKET).orElseThrow(() -> new CustomException("Buket bo'sh"));
         orders.setStatus(OrderStatus.ORDER);
-//        if(userEntity.getIsDeleted()==1){
-//            throw  new CustomException("User o'chirilgan");
-//        }
+        if (userEntity.getIsDeleted() == 1) {
+            throw new CustomException("User o'chirilgan");
+        }
         for (OrderDetailsEntity orderDetails : orders.getOrderDetails()) {
             ProductEntity product = orderDetails.getProduct();
             double amount = product.getQuantity() - orderDetails.getQuantity();
