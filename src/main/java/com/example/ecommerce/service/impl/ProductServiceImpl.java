@@ -88,11 +88,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductEntity getProductById(Long id) {
+    public ProductDto getProductById(Long id) {
         Optional<ProductEntity> byId = productRepository.findById(id);
         if (byId.isEmpty()) {
             throw new CustomException("Mahsulot topilmadi");
         }
-        return byId.get();
+        return modelMapper.map(byId, ProductDto.class);
     }
 }

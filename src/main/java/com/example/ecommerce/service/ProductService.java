@@ -15,5 +15,5 @@ public interface ProductService {
 
     void deletebyId(Long id);
 
-    ProductEntity getProductById(Long id);
+    ProductDto getProductById(Long id);
 }

@@ -53,10 +53,10 @@ public class AdminController {
 
     @Operation(summary = "Id orqali mahsulot olish")
     @GetMapping("/get/{id}")
-    public ResponseEntity<ProductEntity> productById(@PathVariable(value = "id") Long id) {
-        ProductEntity entity = productService.getProductById(id);
-        log.trace("Accessing GET api/product/get/{}", id);
-        return ResponseEntity.ok(entity);
+    public ResponseEntity<ProductDto> productById(@PathVariable(value = "id") Long id) {
+        ProductDto product = productService.getProductById(id);
+        log.trace("Accessing GET api/product/get/{}", product);
+        return ResponseEntity.ok(product);
     }
 
     @Operation(summary = "Id orqali mahsulotni o'chirish")
@@ -146,6 +146,14 @@ public class AdminController {
         } catch (CustomException e) {
             return ResponseEntity.status(404).body(null);
         }
+    }
+
+    @Operation(summary = "Rasmni id orqali o'chirish")
+    @DeleteMapping("/delete-image/{id}")
+    public ResponseEntity<?> deleteImage(@PathVariable Long id) {
+        log.trace("Accessing DELETE /api/delete-image/{}", id);
+        imageService.deleteImageById(id);
+        return ResponseEntity.ok(Boolean.TRUE);
     }
 
 
