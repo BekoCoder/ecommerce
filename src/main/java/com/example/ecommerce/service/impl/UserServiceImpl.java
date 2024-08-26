@@ -79,17 +79,25 @@ public class UserServiceImpl implements UserService {
     }
 
     public void deleteById(Long id) {
-        UserEntity userEntity = userRepository.findById(id).orElseThrow(() -> new CustomException("User o'chirilgan"));
+        UserEntity userEntity = userRepository.findById(id).orElseThrow(() -> new CustomException("User topilmadi"));
+        if (userEntity.getIsDeleted() == 1) {
+            throw new CustomException("User o'chirilgan!!!");
+        }
         userEntity.setIsDeleted(1);
         userRepository.save(userEntity);
     }
 
     public UserDto updateUser(UserDto userDto, Long id) {
-        UserEntity userEntity1 = userRepository.findById(id).orElseThrow(() -> new CustomException("User o'chirilgan"));
+        UserEntity userEntity1 = userRepository.findById(id).orElseThrow(() -> new CustomException("User topilmadi"));
+        if (userEntity1.getIsDeleted() == 1) {
+            throw new CustomException("User o'chirilgan!!!");
+        }
         userEntity1.setUsername(userDto.getUsername());
         userEntity1.setPassword(passwordEncoder.encode(userDto.getPassword()));
         userRepository.save(userEntity1);
         return modelMapper.map(userEntity1, UserDto.class);
+
+
     }
 
     public List<UserDto> getAllUsers() {
@@ -110,7 +118,8 @@ public class UserServiceImpl implements UserService {
         if (userEntity.isPresent()) {
             return modelMapper.map(userEntity, UserDto.class);
         }
-        throw new CustomException("User o'chirilgan");
+        throw new DataNotFoundException("User topilmadi");
+
     }
 
     public void addProductToBucket(Long userId, Long productId, int quantity) {
