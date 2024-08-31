@@ -23,6 +23,8 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+  application:
+    apiUrl: https://nbu.uz/uz/exchange-rates/json
 server:
   servlet:
     context-path: /ecommerce-api

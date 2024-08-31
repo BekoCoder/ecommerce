@@ -1,8 +1,9 @@
 package com.example.ecommerce.controller;
 
+import com.example.ecommerce.dto.CurrencyDto;
 import com.example.ecommerce.dto.UserDto;
 import com.example.ecommerce.entity.OrderDetailsEntity;
-import com.example.ecommerce.entity.OrdersEntity;
+import com.example.ecommerce.service.CurrencyService;
 import com.example.ecommerce.service.impl.UserServiceImpl;
 import com.google.zxing.WriterException;
 import io.swagger.v3.oas.annotations.Operation;
@@ -23,6 +24,7 @@ import java.util.List;
 @Tag(name = "user-controller", description = "  Userlar bo'yicha xizmatlar")
 public class UserController {
     private final UserServiceImpl userService;
+    private final CurrencyService currencyService;
 
     @Operation(summary = "Userni yangilash")
     @PutMapping("/update")
