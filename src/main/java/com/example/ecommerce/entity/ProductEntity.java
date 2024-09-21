@@ -1,7 +1,6 @@
 package com.example.ecommerce.entity;
 
 import com.example.ecommerce.entity.enums.ProductEnum;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

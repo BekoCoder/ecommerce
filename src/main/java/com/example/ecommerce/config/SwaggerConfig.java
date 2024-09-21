@@ -18,10 +18,10 @@ public class SwaggerConfig {
     public OpenAPI customOpenAPI() {
         final String securitySchemeName = "Bearer Token";
         final String apiTitle = String.format(StringUtils.capitalize("Ecommerce API"));
-        final String [] developers={"Mirzayev Bekzod"};
+        final String[] developers = {"Mirzayev Bekzod"};
         final String apiDescription = String.format("""
                         Ushbu REST API %s uchun yaratilgan.\s
-
+                        
                         Dasturchi: %s
                         """,
                 apiTitle,

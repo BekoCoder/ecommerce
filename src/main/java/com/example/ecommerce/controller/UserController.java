@@ -1,6 +1,5 @@
 package com.example.ecommerce.controller;
 
-import com.example.ecommerce.dto.CurrencyDto;
 import com.example.ecommerce.dto.UserDto;
 import com.example.ecommerce.entity.OrderDetailsEntity;
 import com.example.ecommerce.service.CurrencyService;
@@ -47,8 +46,7 @@ public class UserController {
         try {
             userService.addProductToBucket(userId, productId, quantity);
             return ResponseEntity.ok("Mahsulot Savatga qo'shildi");
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
@@ -59,8 +57,7 @@ public class UserController {
         try {
             userService.checkOut(userId);
             return ResponseEntity.ok("Muvaffaqiyatli sotib olindi");
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }

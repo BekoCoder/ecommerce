@@ -10,7 +10,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 public class QrCode {
-    public static byte[] generateQrCodeImages(String  text, int width, int height) throws WriterException, IOException {
+    public static byte[] generateQrCodeImages(String text, int width, int height) throws WriterException, IOException {
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
         BitMatrix bitMatrix = qrCodeWriter.encode(text, BarcodeFormat.QR_CODE, width, height);
 

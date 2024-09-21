@@ -38,6 +38,6 @@ public class OrdersEntity {
     private LocalDateTime createdDate;
 
     @OneToMany(mappedBy = "orders", cascade = CascadeType.ALL)
-    private List<OrderDetailsEntity> orderDetails=new ArrayList<>();
+    private List<OrderDetailsEntity> orderDetails = new ArrayList<>();
 
 }
