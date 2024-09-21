@@ -5,14 +5,14 @@ import com.example.ecommerce.entity.CurrencyEntity;
 import com.example.ecommerce.repository.CurrencyRepository;
 import com.example.ecommerce.service.CurrencyService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Arrays;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -21,31 +21,31 @@ public class CurrencyServiceImpl implements CurrencyService {
     private final CurrencyRepository currencyRepository;
     private final RestTemplate restTemplate;
 
-    @Value("${spring.application.apiUrl}")
-    private String apiUrl;
+//    @Value("${spring.application.apiUrl}")
+//    private String apiUrl;
+
+    private final Environment environment;
 
 
     @Override
-    @Transactional
     public void fetchCurrency() {
-        ResponseEntity<CurrencyDto[]> response = restTemplate.getForEntity(apiUrl, CurrencyDto[].class);
+        ResponseEntity<CurrencyDto[]> response = restTemplate.getForEntity(Objects.requireNonNull(environment.getProperty("spring.application.apiUrl")), CurrencyDto[].class);
         if (response.getStatusCode() == HttpStatus.OK) {
             CurrencyDto[] currency = response.getBody();
-            if (currency != null) {
-                Arrays.stream(currency).forEach(c -> {
-                    CurrencyEntity currencyEntity = new CurrencyEntity();
-                    currencyEntity.setTitle(c.getTitle());
-                    currencyEntity.setCode(c.getCode());
-                    currencyEntity.setCbPrice(c.getCb_price());
-                    currencyEntity.setNbuSellPrice(c.getNbu_cell_price());
-                    currencyEntity.setNbuBuyPrice(c.getNbu_buy_price());
-                    currencyEntity.setDate(c.getDate());
-                    currencyRepository.save(currencyEntity);
-                });
+            if (!ObjectUtils.isEmpty(currency)) {
+                for (CurrencyDto c : currency) {
+                    currencyRepository.save(CurrencyEntity
+                            .builder()
+                            .title(c.getTitle())
+                            .code(c.getCode())
+                            .cbPrice(c.getCb_price())
+                            .nbuSellPrice(c.getNbu_cell_price())
+                            .nbuBuyPrice(c.getNbu_buy_price())
+                            .date(c.getDate())
+                            .build()
+                    );
+                }
             }
-
         }
-
     }
-
 }

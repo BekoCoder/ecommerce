@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -28,8 +30,15 @@ public class UserController {
 
     @Operation(summary = "Userni yangilash")
     @PutMapping("/update")
-    public ResponseEntity<UserDto> updateUser(@RequestBody UserDto user, @RequestParam(value = "userId") Long userId) {
-        return ResponseEntity.ok(userService.updateUser(user, userId));
+    public ResponseEntity<UserDto> updateUser(@RequestBody UserDto user,
+                                              @RequestParam(value = "userId") Long userId,
+                                              @RequestParam(value = "productId") Long productId
+    ) {
+        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+        body.set("userId", userId);
+        body.set("userDto", user);
+        body.set("productId", productId);
+        return ResponseEntity.ok(userService.updateUser(body));
     }
 
     @Operation(summary = "Mahsulotni Bucketga qo'shish")

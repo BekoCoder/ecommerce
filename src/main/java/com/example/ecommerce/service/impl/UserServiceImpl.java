@@ -29,6 +29,8 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.MultiValueMap;
+import org.springframework.util.ObjectUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -87,8 +89,13 @@ public class UserServiceImpl implements UserService {
         userRepository.save(userEntity);
     }
 
-    public UserDto updateUser(UserDto userDto, Long id) {
-        UserEntity userEntity1 = userRepository.findById(id).orElseThrow(() -> new CustomException("User topilmadi"));
+    public UserDto updateUser(MultiValueMap<String, Object> body) {
+        UserDto userDto = (UserDto) body.getFirst("userDto");
+        Long userId = (Long) body.getFirst("userId");
+        if (ObjectUtils.isEmpty(userDto) || ObjectUtils.isEmpty(userId)) {
+            throw new CustomException("Parol yoki username xato kiritildi!!!");
+        }
+        UserEntity userEntity1 = userRepository.findById(userId).orElseThrow(() -> new CustomException("User topilmadi"));
         if (userEntity1.getIsDeleted() == 1) {
             throw new CustomException("User o'chirilgan!!!");
         }

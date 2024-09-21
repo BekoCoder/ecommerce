@@ -7,6 +7,7 @@ import com.example.ecommerce.dto.UserDto;
 import com.example.ecommerce.entity.OrderDetailsEntity;
 import com.google.zxing.WriterException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 
 import java.io.IOException;
 import java.util.List;
@@ -21,7 +22,7 @@ public interface UserService {
 
     void deleteById(Long id);
 
-    UserDto updateUser(UserDto userDto, Long id);
+    UserDto updateUser(MultiValueMap<String, Object> body) throws IOException;
 
     List<UserDto> getAllUsers();
 
