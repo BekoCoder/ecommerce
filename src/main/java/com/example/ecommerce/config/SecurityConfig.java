@@ -47,10 +47,10 @@ public class SecurityConfig {
                 .headers(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                         auth -> auth
-                                .requestMatchers(pathAnonymous)
-                                .permitAll()
+                                .requestMatchers(pathAnonymous).permitAll()
                                 .requestMatchers("/auth/**", "/user/**").permitAll()
                                 .requestMatchers("/admin/**").hasRole("ADMIN")
+                                .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
